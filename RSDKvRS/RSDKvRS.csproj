@@ -34,9 +34,6 @@
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Drawing" />
-    <Reference Include="zlib.net, Version=1.0.3.0, Culture=neutral, PublicKeyToken=47d7877cb3620160">
-      <HintPath>$(SolutionDir)packages\zlib.net.1.0.4.0\lib\zlib.net.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animation.cs" />
@@ -58,9 +55,6 @@
     <Compile Include="TileConfig.cs" />
     <Compile Include="Tiles128x128.cs" />
     <Compile Include="Writer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
