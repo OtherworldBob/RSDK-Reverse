@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using zlib;
+﻿using System.Collections.Generic;
 
 namespace RSDKv5
 {

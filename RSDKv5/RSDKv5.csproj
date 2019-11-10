@@ -75,6 +75,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Serialization" />
+    <Reference Include="zlib.net, Version=1.0.3.0, Culture=neutral, PublicKeyToken=47d7877cb3620160">
+      <HintPath>..\packages\zlib.net.1.0.4.0\lib\zlib.net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animation.cs" />
@@ -109,23 +112,10 @@
     <Compile Include="TileConfig.cs" />
     <Compile Include="WAVConfiguration.cs" />
     <Compile Include="Writer.cs" />
-    <Compile Include="zLib\Adler32.cs" />
-    <Compile Include="zLib\Deflate.cs" />
-    <Compile Include="zLib\InfBlocks.cs" />
-    <Compile Include="zLib\InfCodes.cs" />
-    <Compile Include="zLib\Inflate.cs" />
-    <Compile Include="zLib\InfTree.cs" />
-    <Compile Include="zLib\StaticTree.cs" />
-    <Compile Include="zLib\SupportClass.cs" />
-    <Compile Include="zLib\Tree.cs" />
-    <Compile Include="zLib\ZInputStream.cs" />
-    <Compile Include="zLib\Zlib.cs" />
-    <Compile Include="zLib\ZOutputStream.cs" />
-    <Compile Include="zLib\ZStream.cs" />
-    <Compile Include="zLib\ZStreamException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
