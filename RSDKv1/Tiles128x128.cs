@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using RSDK.Core.IO;
 
 namespace RSDKv1
 {
@@ -104,17 +105,17 @@ namespace RSDKv1
             }
         }
 
-        public Tiles128x128(string filepath) : this(new Reader(filepath))
+        public Tiles128x128(string filepath) : this(new RsdkReader(filepath))
         {
 
         }
 
-        public Tiles128x128(System.IO.Stream reader) : this(new Reader(reader))
+        public Tiles128x128(System.IO.Stream reader) : this(new RsdkReader(reader))
         {
 
         }
 
-        public Tiles128x128(Reader reader)
+        public Tiles128x128(RsdkReader reader)
         {
             BlockList = new Tile128[512];
             byte[] mappingEntry = new byte[3];
@@ -149,18 +150,18 @@ namespace RSDKv1
 
         public void Write(string filename)
         {
-            using (Writer writer = new Writer(filename))
+            using (var writer = new RsdkWriter(filename))
                 this.Write(writer);
         }
 
         public void Write(System.IO.Stream stream)
         {
-            using (Writer writer = new Writer(stream))
+            using (var writer = new RsdkWriter(stream))
                 this.Write(writer);
         }
 
 
-        internal void Write(Writer writer)
+        internal void Write(RsdkWriter writer)
         {
             int[] mappingEntry = new int[3];
 

@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using RSDK.Core.IO;
 
 namespace RSDKvRS
 {
@@ -19,7 +20,7 @@ namespace RSDKvRS
             /// </summary>
             byte Lives;
 
-            public SaveData(Stream stream) : this(new Reader(stream))
+            public SaveData(Stream stream) : this(new RsdkReader(stream))
             {
             }
 
@@ -27,7 +28,7 @@ namespace RSDKvRS
             {
             }
 
-            internal SaveData(Reader reader)
+            internal SaveData(RsdkReader reader)
             {
                 CurrentLevel = reader.ReadByte();
                 EmeraldCount = reader.ReadByte();
@@ -36,17 +37,17 @@ namespace RSDKvRS
 
             public void Write(string filename)
             {
-                using (Writer writer = new Writer(filename))
+                using (var writer = new RsdkWriter(filename))
                     this.Write(writer);
             }
 
             public void Write(System.IO.Stream stream)
             {
-                using (Writer writer = new Writer(stream))
+                using (var writer = new RsdkWriter(stream))
                     this.Write(writer);
             }
 
-            internal void Write(Writer writer)
+            internal void Write(RsdkWriter writer)
             {
                 writer.Write(CurrentLevel);
                 writer.Write(EmeraldCount);
@@ -56,7 +57,7 @@ namespace RSDKvRS
 
         SaveData[] Saves = new SaveData[10];
 
-        public SaveFiles(Stream stream) : this(new Reader(stream))
+        public SaveFiles(Stream stream) : this(new RsdkReader(stream))
         {
         }
 
@@ -64,7 +65,7 @@ namespace RSDKvRS
         {
         }
 
-        internal SaveFiles(Reader reader)
+        internal SaveFiles(RsdkReader reader)
         {
             for (int i = 0; i < 10; i++)
             {
@@ -75,23 +76,22 @@ namespace RSDKvRS
 
         public void Write(string filename)
         {
-            using (Writer writer = new Writer(filename))
+            using (var writer = new RsdkWriter(filename))
                 this.Write(writer);
         }
 
         public void Write(System.IO.Stream stream)
         {
-            using (Writer writer = new Writer(stream))
+            using (var writer = new RsdkWriter(stream))
                 this.Write(writer);
         }
 
-        internal void Write(Writer writer)
+        internal void Write(RsdkWriter writer)
         {
             for (int i = 0; i < 10; i++)
             {
                 Saves[i].Write(writer);
             }
-            writer.Close();
         }
     }
 }

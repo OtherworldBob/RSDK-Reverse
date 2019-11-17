@@ -1,4 +1,5 @@
 ﻿using System;
+using RSDK.Core.IO;
 
 namespace RSDKv5
 {
@@ -44,7 +45,7 @@ namespace RSDKv5
 
         public AttributeInfo(string name, AttributeTypes type) : this(new NameIdentifier(name), type) { }
 
-        internal AttributeInfo(Reader reader)
+        internal AttributeInfo(RsdkReader reader)
         {
             Name = new NameIdentifier(reader);
             Type = (AttributeTypes)reader.ReadByte();
@@ -72,7 +73,7 @@ namespace RSDKv5
             }
         }
 
-        internal void Write(Writer writer)
+        internal void Write(RsdkWriter writer)
         {
             Name.Write(writer);
             writer.Write((byte)Type);

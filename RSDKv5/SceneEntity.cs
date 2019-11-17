@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using RSDK.Core.IO;
 
 namespace RSDKv5
 {
@@ -63,7 +64,7 @@ namespace RSDKv5
             }
         }
 
-        internal SceneEntity(Reader reader, SceneObject obj)
+        internal SceneEntity(RsdkReader reader, SceneObject obj)
         {
             Object = obj;
             SlotID = reader.ReadUInt16();
@@ -95,7 +96,7 @@ namespace RSDKv5
             return GetAttribute(name.ToString());
         }
 
-        internal void Write(Writer writer)
+        internal void Write(RsdkWriter writer)
         {
             writer.Write(SlotID);
             Position.Write(writer);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using RSDK.Core.IO;
 
 //------------------RSDKv5 Stamps format---------------------//
 //--------first format revision by: Carjem Generations-------//
@@ -131,7 +132,7 @@ namespace RSDKv5
 				}
 			}
 
-			public TileChunk(Reader reader)
+			public TileChunk(RsdkReader reader)
 			{
 				ChunkSize = reader.ReadUInt16();
 				TileMapA = new ushort[ChunkSize][];
@@ -154,12 +155,12 @@ namespace RSDKv5
 				}
 			}
 
-			public TileChunk(Reader reader, int OldFormat = 0)
+			public TileChunk(RsdkReader reader, int OldFormat = 0)
 			{
 				if (OldFormat == 0) TileChunkR0(reader);
 			}
 
-			public void TileChunkR0(Reader reader)
+			public void TileChunkR0(RsdkReader reader)
 			{
 				ChunkSize = reader.ReadUInt16();
 				TileMapA = new ushort[ChunkSize][];
@@ -182,7 +183,7 @@ namespace RSDKv5
 				}
 			}
 
-			public void Write(Writer writer)
+			public void Write(RsdkWriter writer)
             {
                 writer.Write(ChunkSize);
                 for (int x = 0; x < ChunkSize; x++)
@@ -205,7 +206,7 @@ namespace RSDKv5
 
         public List<TileChunk> StampList = new List<TileChunk>();
 
-        public Stamps(string filename) : this(new Reader(filename))
+        public Stamps(string filename) : this(new RsdkReader(filename))
         {
 
         }
@@ -215,7 +216,7 @@ namespace RSDKv5
 
         }
 
-        public Stamps(Reader reader)
+        public Stamps(RsdkReader reader)
         {
 			byte[] header = reader.ReadBytes(4);
 
@@ -253,11 +254,11 @@ namespace RSDKv5
 
         public void Write(string filename)
         {
-            using (Writer writer = new Writer(filename))
+            using (var writer = new RsdkWriter(filename))
                 this.Write(writer);
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
             writer.Write(MAGIC);
 

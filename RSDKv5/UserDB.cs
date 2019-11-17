@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using RSDK.Core.IO;
 
 namespace RSDKv5
 {
@@ -14,7 +15,7 @@ namespace RSDKv5
 
             }
 
-            public Entry(Reader reader, UserDB db)
+            public Entry(RsdkReader reader, UserDB db)
             {
                 for (int i = 0; i < 24; i++)
                 {
@@ -23,7 +24,7 @@ namespace RSDKv5
                 ValueNames = db.ValueNames;
             }
 
-            public void Write(Writer writer)
+            public void Write(RsdkWriter writer)
             {
                 for (int i = 0; i < Values.Count; i++)
                 {
@@ -41,9 +42,9 @@ namespace RSDKv5
 
         }
 
-        public UserDB(Reader reader)
+        public UserDB(RsdkReader reader)
         {
-            Reader creader = reader.GetCompressedStreamRaw();
+            var creader = reader.GetCompressedStreamRaw();
             creader.BaseStream.Position += 8;
 
             ushort EntryCount = creader.ReadUInt16();
@@ -79,15 +80,16 @@ namespace RSDKv5
             byte[] array = new byte[creader.BaseStream.Length];
             creader.BaseStream.Position = 0;
             creader.Read(array, 0, (int)creader.BaseStream.Length);
-            Writer writer = new Writer("UserDB.bin");
-            writer.Write(array);
-            writer.Close();
+            using (var writer = new RsdkWriter("UserDB.bin"))
+            {
+                writer.Write(array);
+            }
             creader.Close();
             reader.Close();
                
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
 
         }

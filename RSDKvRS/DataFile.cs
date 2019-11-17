@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using RSDK.Core.IO;
 
 namespace RSDKvRS
 {
@@ -23,7 +21,7 @@ namespace RSDKvRS
             {
             }
 
-            public DirInfo(Reader reader)
+            public DirInfo(RsdkReader reader)
             {
                 Directory = reader.ReadString();
                // Console.WriteLine(Directory);
@@ -34,14 +32,15 @@ namespace RSDKvRS
             {
                 System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(Directory);
                 if (!di.Exists) di.Create();
-                Writer writer = new Writer(dataFolder);
-                Directory = Directory.Replace('\\', '/');
-                writer.Write(Directory);
-                writer.Write(Address);
-                writer.Close();
+                using (var writer = new RsdkWriter(dataFolder))
+                {
+                    Directory = Directory.Replace('\\', '/');
+                    writer.Write(Directory);
+                    writer.Write(Address);
+                }
             }
 
-            public void Write(Writer writer)
+            public void Write(RsdkWriter writer)
             {
                 Directory = Directory.Replace('\\', '/');
                 writer.Write(Directory);
@@ -78,7 +77,7 @@ namespace RSDKvRS
             {
             }
 
-            public FileInfo(Reader reader)
+            public FileInfo(RsdkReader reader)
             {
                 FileName = reader.ReadString();
                 //Console.WriteLine(FileName);
@@ -94,12 +93,13 @@ namespace RSDKvRS
                 if (!di.Exists) di.Create();
                 string name = fullDir + FileName;
                 name = name.Replace('\\', '/');
-                Writer writer = new Writer(fullDir + FileName);
-                writer.Write(Filedata);
-                writer.Close();
+                using (var writer = new RsdkWriter(fullDir + FileName))
+                {
+                    writer.Write(Filedata);
+                }
             }
 
-            public void Write(Writer writer)
+            public void Write(RsdkWriter writer)
             {
                 writer.Write(FileName);
                 writer.Write((uint)Filedata.Length);
@@ -122,10 +122,10 @@ namespace RSDKvRS
 
         }
 
-        public DataFile(string filepath): this(new Reader(filepath))
+        public DataFile(string filepath): this(new RsdkReader(filepath))
         {}
 
-        public DataFile(Reader reader)
+        public DataFile(RsdkReader reader)
         {
 
             int DirBlockSize = reader.ReadInt32();
@@ -171,7 +171,7 @@ namespace RSDKvRS
             reader.Close();
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
 
             int DirHeaderSize = 0;

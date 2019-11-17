@@ -1,4 +1,6 @@
-﻿namespace RSDKv5
+﻿using RSDK.Core.IO;
+
+namespace RSDKv5
 {
     public class Palette
     {
@@ -34,7 +36,7 @@
             }
         }
 
-        public Palette(Reader reader)
+        public Palette(RsdkReader reader)
         {
             ushort columns_bitmap = reader.ReadUInt16();
             for (int i = 0; i < PALETTE_COLUMNS; ++i)
@@ -48,7 +50,7 @@
             }
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
             ushort columns_bitmap = 0;
             for (int i = 0; i < PALETTE_COLUMNS; ++i)

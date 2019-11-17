@@ -1,8 +1,9 @@
 ﻿using System.Drawing;
+using RSDK.Core.IO;
 
 namespace RSDKv1
 {
-    public class Tileconfig
+    public class TileConfig
     {
         /// <summary>
         /// 1024, one for each tile
@@ -66,9 +67,9 @@ namespace RSDKv1
                 isCeiling = false;
             }
 
-            public CollisionMask(System.IO.Stream stream) : this(new Reader(stream)) { }
+            public CollisionMask(System.IO.Stream stream) : this(new RsdkReader(stream)) { }
 
-            internal CollisionMask(Reader reader)
+            internal CollisionMask(RsdkReader reader)
             {
 
                 byte flags = reader.ReadByte();
@@ -105,7 +106,7 @@ namespace RSDKv1
 
             }
 
-            public void Write(Writer writer)
+            public void Write(RsdkWriter writer)
             {
                 writer.Write(AddNibbles(isCeiling ? (byte)1 : (byte)0, Behaviour));
                 writer.Write(FloorAngle);
@@ -215,7 +216,7 @@ namespace RSDKv1
 
         }
 
-        public Tileconfig()
+        public TileConfig()
         {
             for (int i = 0; i < TILES_COUNT; ++i)
             {
@@ -224,17 +225,17 @@ namespace RSDKv1
             }
         }
 
-        public Tileconfig(string filename) : this(new Reader(filename))
+        public TileConfig(string filename) : this(new RsdkReader(filename))
         {
 
         }
 
-        public Tileconfig(System.IO.Stream stream) : this(new Reader(stream))
+        public TileConfig(System.IO.Stream stream) : this(new RsdkReader(stream))
         {
 
         }
 
-        public Tileconfig(Reader reader)
+        public TileConfig(RsdkReader reader)
         {
             for (int i = 0; i < TILES_COUNT; ++i)
             {
@@ -246,15 +247,15 @@ namespace RSDKv1
 
         public void Write(string filename)
         {
-            Write(new Writer(filename));
+            Write(new RsdkWriter(filename));
         }
 
         public void Write(System.IO.Stream s)
         {
-            Write(new Writer(s));
+            Write(new RsdkWriter(s));
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
             for (int i = 0; i < TILES_COUNT; ++i)
             {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Drawing;
+using RSDK.Core.IO;
 
 namespace RSDKvB
 {
@@ -154,14 +155,14 @@ namespace RSDKvB
 
                 }
 
-                public Normal(Reader reader)
+                public Normal(RsdkReader reader)
                 {
                     x = reader.ReadSingle();
                     y = reader.ReadSingle();
                     z = reader.ReadSingle();
                 }
 
-                public void Write(Writer writer)
+                public void Write(RsdkWriter writer)
                 {
                     writer.Write(x);
                     writer.Write(y);
@@ -183,7 +184,7 @@ namespace RSDKvB
 
             }
 
-            public Vertex(Reader reader)
+            public Vertex(RsdkReader reader)
             {
                 x = reader.ReadSingle();
                 y = reader.ReadSingle();
@@ -192,7 +193,7 @@ namespace RSDKvB
                 normal = new Normal(reader);
             }
 
-            public void Write(Writer writer)
+            public void Write(RsdkWriter writer)
             {
                 writer.Write(x);
                 writer.Write(y);
@@ -223,14 +224,14 @@ namespace RSDKvB
 
             }
 
-            public Face(Reader reader)
+            public Face(RsdkReader reader)
             {
                 X = reader.ReadInt16();
                 Y = reader.ReadInt16();
                 Z = reader.ReadInt16();
             }
 
-            public void Write(Writer writer)
+            public void Write(RsdkWriter writer)
             {
                 writer.Write(X);
                 writer.Write(Y);
@@ -248,13 +249,13 @@ namespace RSDKvB
 
             }
 
-            public TexturePosition(Reader reader)
+            public TexturePosition(RsdkReader reader)
             {
                 X = reader.ReadSingle();
                 Y = reader.ReadSingle();
             }
 
-            public void Write(Writer writer)
+            public void Write(RsdkWriter writer)
             {
                 writer.Write(X);
                 writer.Write(Y);
@@ -313,17 +314,17 @@ namespace RSDKvB
             }
         }
 
-        public Model(string filename) : this(new Reader(filename))
+        public Model(string filename) : this(new RsdkReader(filename))
         {
 
         }
 
-        public Model(Stream stream) : this(new Reader(stream))
+        public Model(Stream stream) : this(new RsdkReader(stream))
         {
 
         }
 
-        public Model(Reader reader)
+        public Model(RsdkReader reader)
         {
             if (!reader.ReadBytes(4).SequenceEqual(MAGIC))
                 throw new Exception("Invalid config file header magic");
@@ -373,7 +374,7 @@ namespace RSDKvB
 
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
             writer.Write(MAGIC);
 
@@ -437,7 +438,7 @@ namespace RSDKvB
             File.WriteAllText(streamName, builder.ToString());
         }
 
-        public void WriteMTL(Writer writer)
+        public void WriteMTL(RsdkWriter writer)
         {
             StringBuilder builder = new StringBuilder();
             // Shows I been here lol - SS16
@@ -448,7 +449,7 @@ namespace RSDKvB
 
         }
 
-        public void WriteAsSTLBinary(Writer writer)
+        public void WriteAsSTLBinary(RsdkWriter writer)
         {
 
             byte[] junk = Encoding.ASCII.GetBytes("Kimi no sei kimi no sei kimi no sei de watashi Oh Okubyou de kakkou tsukanai kimi no sei da yo");

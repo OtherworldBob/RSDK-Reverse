@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using RSDK.Core.IO;
 
 namespace RSDKv5
 {
@@ -37,12 +38,12 @@ namespace RSDKv5
             EditorMetadata = new SceneEditorMetadata();
         }
 
-        public Scene(string filename) : this(new Reader(filename))
+        public Scene(string filename) : this(new RsdkReader(filename))
         {
 
         }
 
-        public Scene(Reader reader)
+        public Scene(RsdkReader reader)
         {
             if (!readTilesOnly)
             {
@@ -80,17 +81,17 @@ namespace RSDKv5
 
         public void Write(string filename)
         {
-            using (Writer writer = new Writer(filename))
+            using (var writer = new RsdkWriter(filename))
                 this.Write(writer);
         }
 
         public void Write(Stream stream)
         {
-            using (Writer writer = new Writer(stream))
+            using (var writer = new RsdkWriter(stream))
                 this.Write(writer);
         }
 
-        internal void Write(Writer writer)
+        internal void Write(RsdkWriter writer)
         {
             writer.Write(MAGIC);
 

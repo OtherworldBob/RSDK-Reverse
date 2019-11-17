@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using RSDK.Core.IO;
 
 namespace RSDKvB
 {
@@ -120,17 +121,17 @@ namespace RSDKvB
             MapLayout[0] = new ushort[1];
         }
 
-        public Scene(string filename) : this(new Reader(filename))
+        public Scene(string filename) : this(new RsdkReader(filename))
         {
 
         }
 
-        public Scene(System.IO.Stream stream) : this(new Reader(stream))
+        public Scene(System.IO.Stream stream) : this(new RsdkReader(stream))
         {
 
         }
 
-        public Scene(Reader reader)
+        public Scene(RsdkReader reader)
         {
             Title = reader.ReadRSDKString();
             //Console.WriteLine(Title);
@@ -196,17 +197,17 @@ namespace RSDKvB
 
         public void Write(string filename)
         {
-            using (Writer writer = new Writer(filename))
+            using (var writer = new RsdkWriter(filename))
                 this.Write(writer);
         }
 
         public void Write(System.IO.Stream stream)
         {
-            using (Writer writer = new Writer(stream))
+            using (var writer = new RsdkWriter(stream))
                 this.Write(writer);
         }
 
-        internal void Write(Writer writer)
+        internal void Write(RsdkWriter writer)
         {
             // Write zone name		
             writer.WriteRSDKString(Title);

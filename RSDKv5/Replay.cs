@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using RSDK.Core.IO;
 
 namespace RSDKv5
 {
@@ -10,9 +11,9 @@ namespace RSDKv5
 
         }
 
-        public Replay(Reader reader)
+        public Replay(RsdkReader reader)
         {
-            Reader creader = reader.GetCompressedStreamRaw();
+            var creader = reader.GetCompressedStreamRaw();
             //creader.BaseStream.Position = 0x84;
 
             while (creader.BaseStream.Position + 8 < creader.BaseStream.Length)
@@ -23,7 +24,7 @@ namespace RSDKv5
             creader.Close();
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
 
         }

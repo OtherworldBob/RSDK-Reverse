@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using RSDK.Core.IO;
 
 namespace RSDKvRS
 {
@@ -161,7 +162,7 @@ namespace RSDKvRS
 
                 }
 
-                public Frame(Reader reader, Animation anim = null)
+                public Frame(RsdkReader reader, Animation anim = null)
                 {
                     X = reader.ReadByte();
                     Y = reader.ReadByte();
@@ -183,7 +184,7 @@ namespace RSDKvRS
                     PivotY = (sbyte)PivotVals[1];
                 }
 
-                public void Write(Writer writer)
+                public void Write(RsdkWriter writer)
                 {
                     writer.Write(X);
                     writer.Write(Y);
@@ -230,7 +231,7 @@ namespace RSDKvRS
 
             }
 
-            public AnimationEntry(Reader reader)
+            public AnimationEntry(RsdkReader reader)
             {
                 byte frameCount = reader.ReadByte();
                 SpeedMultiplyer = (byte)(reader.ReadByte() * 4);
@@ -241,7 +242,7 @@ namespace RSDKvRS
                 }
             }
 
-            public void Write(Writer writer)
+            public void Write(RsdkWriter writer)
             {
                 writer.Write((byte)Frames.Count);
                 writer.Write(SpeedMultiplyer);
@@ -278,7 +279,7 @@ namespace RSDKvRS
 
         }
 
-        public Animation(Reader reader, bool DreamcastVer = false)
+        public Animation(RsdkReader reader, bool DreamcastVer = false)
         {
             Unknown = reader.ReadByte();
             PlayerType = reader.ReadByte();
@@ -314,7 +315,7 @@ namespace RSDKvRS
             reader.Close();
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
             writer.Write(Unknown);
             writer.Write(PlayerType);

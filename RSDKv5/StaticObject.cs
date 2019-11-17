@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using RSDK.Core.IO;
 
 namespace RSDKv5
 {
@@ -20,7 +20,7 @@ namespace RSDKv5
 
         }
 
-        public StaticObject(Reader reader)
+        public StaticObject(RsdkReader reader)
         {
             int[] TmpData = new int[reader.BaseStream.Length];
             DataPos = 0;
@@ -158,7 +158,7 @@ namespace RSDKv5
             }
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
             writer.Write(MAGIC);
 

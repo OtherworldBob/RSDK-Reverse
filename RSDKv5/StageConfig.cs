@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using RSDK.Core.IO;
 
 namespace RSDKv5
 {
@@ -14,7 +15,7 @@ namespace RSDKv5
         /// </summary>
         public bool LoadGlobalObjects;
 
-        public StageConfig(string filename) : this(new Reader(filename))
+        public StageConfig(string filename) : this(new RsdkReader(filename))
         {
             FilePath = filename;
         }
@@ -27,12 +28,12 @@ namespace RSDKv5
             }
         }
 
-        public StageConfig(Stream stream) : this(new Reader(stream))
+        public StageConfig(Stream stream) : this(new RsdkReader(stream))
         {
 
         }
 
-        public StageConfig(Reader reader)
+        public StageConfig(RsdkReader reader)
         {
             base.ReadMagic(reader);
 
@@ -43,17 +44,17 @@ namespace RSDKv5
 
         public void Write(string filename)
         {
-            using (Writer writer = new Writer(filename))
+            using (var writer = new RsdkWriter(filename))
                 this.Write(writer);
         }
 
         public void Write(Stream stream)
         {
-            using (Writer writer = new Writer(stream))
+            using (var writer = new RsdkWriter(stream))
                 this.Write(writer);
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
             base.WriteMagic(writer);
 

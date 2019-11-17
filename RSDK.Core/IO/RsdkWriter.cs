@@ -1,15 +1,16 @@
-﻿using System.Text;
-using System.IO;
+﻿using System.IO;
+using System.IO.Compression;
+using System.Text;
 
-namespace RSDKvRS
+namespace RSDK.Core.IO
 {
-    public class Writer : BinaryWriter
+    public class RsdkWriter : BinaryWriter
     {
-        public Writer(Stream stream) : base(stream)
+        public RsdkWriter(Stream stream) : base(stream)
         {
         }
 
-        public Writer(string file) : base(File.Open(file, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
+        public RsdkWriter(string file) : base(File.Open(file, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
         {
         }
 
@@ -22,7 +23,6 @@ namespace RSDKvRS
         {
             BaseStream.Seek(position, org);
         }
-
 
         public long Pos
         {
@@ -56,6 +56,23 @@ namespace RSDKvRS
         {
             base.Write((ushort)val.Length);
             base.Write(new UnicodeEncoding().GetBytes(val));
+        }
+
+        public void WriteCompressed(byte[] bytes)
+        {
+            byte[] data;
+            using (var outMemoryStream = new MemoryStream())
+            {
+                using (var compressionStream = new GZipStream(outMemoryStream, CompressionMode.Compress))
+                {
+                    compressionStream.Write(bytes, 0, bytes.Length);
+                }
+                data = outMemoryStream.ToArray();
+            }
+
+            Write((uint)data.Length + sizeof(uint)); // compressed length + offset
+            WriteUInt32BE((uint)bytes.Length); // raw, uncompressed length
+            Write(data); // actual compressed data
         }
     }
 }

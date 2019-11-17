@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using RSDK.Core.IO;
 
 namespace RSDKv5
 {
@@ -39,7 +40,7 @@ namespace RSDKv5
 
         /*public SceneObjects(string name, List<AttributeInfo> attributes) : this(new NameIdentifier(name), attributes) { }*/
 
-        internal SceneObject(Reader reader)
+        internal SceneObject(RsdkReader reader)
         {
             Name = new NameIdentifier(reader);
             var info = Objects.GetObjectName(Name);
@@ -57,7 +58,7 @@ namespace RSDKv5
                 
         }
 
-        internal void Write(Writer writer)
+        internal void Write(RsdkWriter writer)
         {
             Name.Write(writer);
 

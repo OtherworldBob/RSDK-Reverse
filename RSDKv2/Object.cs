@@ -1,4 +1,5 @@
 ﻿using System;
+using RSDK.Core.IO;
 
 namespace RSDKv2
 {
@@ -66,7 +67,7 @@ namespace RSDKv2
             this.id = id;
         }
 
-        public Object(Reader reader)
+        public Object(RsdkReader reader)
         {
             cur_id++;
             id = cur_id;
@@ -87,7 +88,7 @@ namespace RSDKv2
             //Console.WriteLine(id + " Obj Values: Type: " + type + ", Subtype: " + subtype + ", Xpos = " + xPos + ", Ypos = " + yPos);
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
             if (type > 255)
                 throw new Exception("Cannot save as Type v2. Object type > 255");

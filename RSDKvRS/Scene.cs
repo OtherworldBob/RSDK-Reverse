@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using RSDK.Core.IO;
 
 namespace RSDKvRS
 {
@@ -119,27 +120,23 @@ namespace RSDKvRS
             MapLayout[0] = new ushort[1];
         }
 
-        public Scene(string filename) : this(new Reader(filename))
+        public Scene(string filename) : this(new RsdkReader(filename))
         {
 
         }
 
-        public Scene(System.IO.Stream stream) : this(new Reader(stream))
+        public Scene(System.IO.Stream stream) : this(new RsdkReader(stream))
         {
 
         }
 
-        public Scene(Reader reader)
+        public Scene(RsdkReader reader)
         {
             // Separate path components			
             String dirname = Path.GetDirectoryName(reader.GetFilename());
             String basename = "\\" + Path.GetFileNameWithoutExtension(reader.GetFilename());
 
             String itmPath = dirname + basename + ".itm";
-
-            Reader ITMreader = new Reader(itmPath);
-
-            Title = ITMreader.ReadRSDKString();
 
             width = reader.ReadByte();
             height = reader.ReadByte();
@@ -158,40 +155,47 @@ namespace RSDKvRS
                 }
             }
 
-            Music = ITMreader.ReadByte();
-            Background = ITMreader.ReadByte();
-            PlayerXpos = (short)(ITMreader.ReadByte() << 8);
-            PlayerXpos |= ITMreader.ReadByte();
-            PlayerYPos = (short)(ITMreader.ReadByte() << 8);
-            PlayerYPos |= ITMreader.ReadByte();
-
-            // Read objects from the item file
-            int ObjCount = ITMreader.ReadByte() << 8;
-            ObjCount |= ITMreader.ReadByte();
-
-            Object.cur_id = 0;
-
-            for (int i = 0; i < ObjCount; i++)
+            using (var ITMreader = new RsdkReader(itmPath))
             {
-                // Add object
-                objects.Add(new Object(ITMreader));
+
+                Title = ITMreader.ReadRSDKString();
+
+                Music = ITMreader.ReadByte();
+                Background = ITMreader.ReadByte();
+                PlayerXpos = (short)(ITMreader.ReadByte() << 8);
+                PlayerXpos |= ITMreader.ReadByte();
+                PlayerYPos = (short)(ITMreader.ReadByte() << 8);
+                PlayerYPos |= ITMreader.ReadByte();
+
+                // Read objects from the item file
+                int ObjCount = ITMreader.ReadByte() << 8;
+                ObjCount |= ITMreader.ReadByte();
+
+                Object.cur_id = 0;
+
+                for (int i = 0; i < ObjCount; i++)
+                {
+                    // Add object
+                    objects.Add(new Object(ITMreader));
+                }
             }
+
             reader.Close();
         }
 
         public void Write(string filename)
         {
-            using (Writer writer = new Writer(filename))
+            using (var writer = new RsdkWriter(filename))
                 this.Write(writer);
         }
 
         public void Write(Stream stream)
         {
-            using (Writer writer = new Writer(stream))
+            using (var writer = new RsdkWriter(stream))
                 this.Write(writer);
         }
 
-        internal void Write(Writer writer)
+        internal void Write(RsdkWriter writer)
         {
 
             //Checks To make sure that the file can be saved correctly
@@ -213,8 +217,7 @@ namespace RSDKvRS
 
             String itmPath = dirname + basename + ".itm";
 
-            // Create item file
-            Writer ITMwriter = new Writer(itmPath);
+            
 
             // Save width and height
             writer.Write((byte)width);
@@ -228,29 +231,32 @@ namespace RSDKvRS
             // Close map file
             writer.Close();
 
-            // Save zone name
-            ITMwriter.WriteRSDKString(Title);
-
-            // Write the Stage Init Data
-            ITMwriter.Write(Music);
-            ITMwriter.Write(Background);
-            ITMwriter.Write((byte)(PlayerXpos >> 8));
-            ITMwriter.Write((byte)(PlayerXpos & 0xFF));
-            ITMwriter.Write((byte)(PlayerYPos >> 8));
-            ITMwriter.Write((byte)(PlayerYPos & 0xFF));
-
-            // Write number of objects
-            ITMwriter.Write((byte)(num_of_objects >> 8));
-            ITMwriter.Write((byte)(num_of_objects & 0xFF));
-
-            // Write object data
-            for (int n = 0; n < num_of_objects; n++)
+            // Create item file
+            using (var ITMwriter = new RsdkWriter(itmPath))
             {
-                Object obj = objects[n];
+                // Save zone name
+                ITMwriter.WriteRSDKString(Title);
 
-                obj.Write(ITMwriter);
+                // Write the Stage Init Data
+                ITMwriter.Write(Music);
+                ITMwriter.Write(Background);
+                ITMwriter.Write((byte)(PlayerXpos >> 8));
+                ITMwriter.Write((byte)(PlayerXpos & 0xFF));
+                ITMwriter.Write((byte)(PlayerYPos >> 8));
+                ITMwriter.Write((byte)(PlayerYPos & 0xFF));
+
+                // Write number of objects
+                ITMwriter.Write((byte)(num_of_objects >> 8));
+                ITMwriter.Write((byte)(num_of_objects & 0xFF));
+
+                // Write object data
+                for (int n = 0; n < num_of_objects; n++)
+                {
+                    Object obj = objects[n];
+
+                    obj.Write(ITMwriter);
+                }
             }
-            ITMwriter.Close();
         }
 
     }
@@ -299,17 +305,17 @@ namespace RSDKvRS
             }
         }
 
-        public MapLayout(string filename) : this(new Reader(filename))
+        public MapLayout(string filename) : this(new RsdkReader(filename))
         {
 
         }
 
-        public MapLayout(System.IO.Stream stream) : this(new Reader(stream))
+        public MapLayout(System.IO.Stream stream) : this(new RsdkReader(stream))
         {
 
         }
 
-        public MapLayout(Reader reader)
+        public MapLayout(RsdkReader reader)
         {
 
             width = reader.ReadByte();
@@ -333,17 +339,17 @@ namespace RSDKvRS
 
         public void Write(string filename)
         {
-            using (Writer writer = new Writer(filename))
+            using (var writer = new RsdkWriter(filename))
                 this.Write(writer);
         }
 
         public void Write(System.IO.Stream stream)
         {
-            using (Writer writer = new Writer(stream))
+            using (var writer = new RsdkWriter(stream))
                 this.Write(writer);
         }
 
-        internal void Write(Writer writer)
+        internal void Write(RsdkWriter writer)
         {
             // Save width and height
             writer.Write((byte)width);
@@ -380,17 +386,17 @@ namespace RSDKvRS
 
         List<Object> objects = new List<Object>();
 
-        public ObjectLayout(string filename) : this(new Reader(filename))
+        public ObjectLayout(string filename) : this(new RsdkReader(filename))
         {
 
         }
 
-        public ObjectLayout(System.IO.Stream stream) : this(new Reader(stream))
+        public ObjectLayout(System.IO.Stream stream) : this(new RsdkReader(stream))
         {
 
         }
 
-        public ObjectLayout(Reader reader)
+        public ObjectLayout(RsdkReader reader)
         {
 
             Title = reader.ReadRSDKString();
@@ -418,17 +424,17 @@ namespace RSDKvRS
 
         public void Write(string filename)
         {
-            using (Writer writer = new Writer(filename))
+            using (var writer = new RsdkWriter(filename))
                 this.Write(writer);
         }
 
         public void Write(System.IO.Stream stream)
         {
-            using (Writer writer = new Writer(stream))
+            using (var writer = new RsdkWriter(stream))
                 this.Write(writer);
         }
 
-        internal void Write(Writer writer)
+        internal void Write(RsdkWriter writer)
         {
             //Checks To make sure that the file can be saved correctly
 

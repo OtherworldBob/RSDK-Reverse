@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using RSDK.Core.IO;
 
 namespace RSDKv2
 {
@@ -342,7 +343,7 @@ namespace RSDKv2
             SaveFile = 1;
         }
 
-        public SaveFiles(Stream stream) : this(new Reader(stream))
+        public SaveFiles(Stream stream) : this(new RsdkReader(stream))
         {
         }
 
@@ -350,7 +351,7 @@ namespace RSDKv2
         {
         }
 
-        internal SaveFiles(Reader reader)
+        internal SaveFiles(RsdkReader reader)
         {
             SaveFile = 1;
             for (int i = 0; i < FileSize / 4; i++)
@@ -373,17 +374,17 @@ namespace RSDKv2
 
         public void Write(string filename)
         {
-            using (Writer writer = new Writer(filename))
+            using (var writer = new RsdkWriter(filename))
                 this.Write(writer);
         }
 
         public void Write(System.IO.Stream stream)
         {
-            using (Writer writer = new Writer(stream))
+            using (var writer = new RsdkWriter(stream))
                 this.Write(writer);
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
             for (int i = 0; i < SaveRAM.Length; i++)
             {

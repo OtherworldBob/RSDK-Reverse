@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using RSDK.Core.IO;
 
 namespace RSDKv1
 {
@@ -67,7 +67,7 @@ namespace RSDKv1
                 }
             }
 
-            public BGLayer(Reader reader)
+            public BGLayer(RsdkReader reader)
             {
                 width = reader.ReadByte();
                 height = reader.ReadByte();
@@ -125,7 +125,7 @@ namespace RSDKv1
                 }
             }
 
-            public void Write(Writer writer)
+            public void Write(RsdkWriter writer)
             {
                 writer.Write(width);
                 writer.Write(height);
@@ -163,7 +163,7 @@ namespace RSDKv1
 
             }
 
-            private static void rle_write(Writer file, int pixel, int count)
+            private static void rle_write(RsdkWriter file, int pixel, int count)
             {
                 if (count <= 2)
                 {
@@ -215,14 +215,14 @@ namespace RSDKv1
                 Deform = d;
             }
 
-            public ScrollInfo(Reader reader)
+            public ScrollInfo(RsdkReader reader)
             {
                 RelativeSpeed = reader.ReadByte();
                 ConstantSpeed = reader.ReadByte();
                 Deform = reader.ReadByte();
             }
 
-            public void Write(Writer writer)
+            public void Write(RsdkWriter writer)
             {
                 writer.Write(RelativeSpeed);
                 writer.Write(ConstantSpeed);
@@ -248,17 +248,11 @@ namespace RSDKv1
 
         }
 
-        public BGLayout(string filename) : this(new Reader(filename))
-        {
+        public BGLayout(string filename) : this(new RsdkReader(filename)) { }
 
-        }
+        public BGLayout(System.IO.Stream stream) : this(new RsdkReader(stream)) { }
 
-        public BGLayout(System.IO.Stream stream) : this(new Reader(stream))
-        {
-
-        }
-
-        public BGLayout(Reader reader)
+        public BGLayout(RsdkReader reader)
         {
             byte layerCount = reader.ReadByte();
 
@@ -290,17 +284,17 @@ namespace RSDKv1
 
         public void Write(string filename)
         {
-            using (Writer writer = new Writer(filename))
+            using (var writer = new RsdkWriter(filename))
                 this.Write(writer);
         }
 
         public void Write(System.IO.Stream stream)
         {
-            using (Writer writer = new Writer(stream))
+            using (var writer = new RsdkWriter(stream))
                 this.Write(writer);
         }
 
-        internal void Write(Writer writer)
+        internal void Write(RsdkWriter writer)
         {
             // Save Data
             writer.Write((byte)Layers.Count);

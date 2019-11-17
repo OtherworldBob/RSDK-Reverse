@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using RSDK.Core.IO;
 
 namespace RSDKv1
 {
@@ -107,7 +108,7 @@ namespace RSDKv1
                 ImageData = new byte[Width * Height];
             }
 
-            public VideoFrame(Reader reader, ushort width, ushort height)
+            public VideoFrame(RsdkReader reader, ushort width, ushort height)
             {
                 Width = width;
                 Height = height;
@@ -133,7 +134,7 @@ namespace RSDKv1
                 ReadGIFData(reader);
             }
 
-            uint ReadCode(Reader reader, int codeSize)
+            uint ReadCode(RsdkReader reader, int codeSize)
             {
                 if (blockLength == 0)
                     blockLength = reader.ReadByte();
@@ -165,7 +166,7 @@ namespace RSDKv1
                 public byte Suffix;
             };
 
-            public void ReadGIFData(Reader reader)
+            public void ReadGIFData(RsdkReader reader)
             {
                 int eighthHeight = Height >> 3;
                 int quarterHeight = Height >> 2;
@@ -421,17 +422,17 @@ namespace RSDKv1
 
         }
 
-        public Video(string filepath) : this(new Reader(filepath))
+        public Video(string filepath) : this(new RsdkReader(filepath))
         {
 
         }
 
-        public Video(System.IO.Stream stream) : this(new Reader(stream))
+        public Video(System.IO.Stream stream) : this(new RsdkReader(stream))
         {
 
         }
 
-        public Video(Reader reader)
+        public Video(RsdkReader reader)
         {
             VideoInfo = reader.ReadUInt16();
 
@@ -448,24 +449,24 @@ namespace RSDKv1
             reader.Close();
         }
 
-        void LoadVideoFrame(Reader reader)
+        void LoadVideoFrame(RsdkReader reader)
         {
             Frames.Add(new VideoFrame(reader, Width, Height));
         }
 
         public void Write(string filename)
         {
-            using (Writer writer = new Writer(filename))
+            using (var writer = new RsdkWriter(filename))
                 this.Write(writer);
         }
 
         public void Write(System.IO.Stream reader)
         {
-            using (Writer writer = new Writer(reader))
+            using (var writer = new RsdkWriter(reader))
                 this.Write(writer);
         }
 
-        internal void Write(Writer writer)
+        internal void Write(RsdkWriter writer)
         {
 
             writer.Close();

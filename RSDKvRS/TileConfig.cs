@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using RSDK.Core.IO;
 
 namespace RSDKvRS
 {
@@ -23,17 +24,17 @@ namespace RSDKvRS
             }
         }
 
-        public Tileconfig(string filename, bool DCver = false) : this(new Reader(filename), DCver)
+        public Tileconfig(string filename, bool DCver = false) : this(new RsdkReader(filename), DCver)
         {
 
         }
 
-        public Tileconfig(System.IO.Stream stream, bool DCver = false) : this(new Reader(stream), DCver)
+        public Tileconfig(System.IO.Stream stream, bool DCver = false) : this(new RsdkReader(stream), DCver)
         {
 
         }
 
-        public Tileconfig(Reader reader, bool DCver = false)
+        public Tileconfig(RsdkReader reader, bool DCver = false)
         {
             for (int i = 0; i < TILES_COUNT; ++i)
             {
@@ -44,17 +45,17 @@ namespace RSDKvRS
 
         public void Write(string filename, bool DCver = false)
         {
-            using (Writer writer = new Writer(filename))
+            using (var writer = new RsdkWriter(filename))
                 this.Write(writer, DCver);
         }
 
         public void Write(System.IO.Stream stream, bool DCver = false)
         {
-            using (Writer writer = new Writer(stream))
+            using (var writer = new RsdkWriter(stream))
                 this.Write(writer, DCver);
         }
 
-        public void Write(Writer writer, bool DCver = false)
+        public void Write(RsdkWriter writer, bool DCver = false)
         {
             for (int i = 0; i < TILES_COUNT; ++i)
             {
@@ -98,15 +99,15 @@ namespace RSDKvRS
             {
             }
 
-            public CollisionMask(string filename, bool DCver = false) : this(new Reader(filename), DCver)
+            public CollisionMask(string filename, bool DCver = false) : this(new RsdkReader(filename), DCver)
             {
             }
 
-            public CollisionMask(System.IO.Stream stream, bool DCver = false) : this(new Reader(stream), DCver)
+            public CollisionMask(System.IO.Stream stream, bool DCver = false) : this(new RsdkReader(stream), DCver)
             {
             }
 
-            public CollisionMask(Reader reader, bool DCver = false)
+            public CollisionMask(RsdkReader reader, bool DCver = false)
             {
 
                 for (int p = 0; p < 2; p++)
@@ -144,17 +145,17 @@ namespace RSDKvRS
 
             public void Write(string filename, bool DCver = false)
             {
-                using (Writer writer = new Writer(filename))
+                using (var writer = new RsdkWriter(filename))
                     this.Write(writer, DCver);
             }
 
             public void Write(System.IO.Stream stream, bool DCver = false)
             {
-                using (Writer writer = new Writer(stream))
+                using (var writer = new RsdkWriter(stream))
                     this.Write(writer, DCver);
             }
 
-            internal void Write(Writer writer, bool DCver = false)
+            internal void Write(RsdkWriter writer, bool DCver = false)
             {
 
                 if (!DCver)

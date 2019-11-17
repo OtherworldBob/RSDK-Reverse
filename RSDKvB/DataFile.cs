@@ -4,6 +4,7 @@ using System.Linq;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using RSDK.Core.IO;
 
 namespace RSDKvB
 {
@@ -81,7 +82,7 @@ namespace RSDKvB
 
             }
 
-            public FileInfo(Reader reader, List<string> FileList, int cnt)
+            public FileInfo(RsdkReader reader, List<string> FileList, int cnt)
             {
                 for (int y = 0; y < 16; y += 4)
                 {
@@ -166,7 +167,7 @@ namespace RSDKvB
                 md5.Dispose();
             }
 
-            public void WriteFileHeader(Writer writer)
+            public void WriteFileHeader(RsdkWriter writer)
             {
                 FileName = FileName.Replace('\\', '/');
 
@@ -185,7 +186,7 @@ namespace RSDKvB
                 writer.Write(FileSize | (Encrypted ? 0x80000000 : 0));
             }
 
-            public void WriteFileData(Writer writer)
+            public void WriteFileData(RsdkWriter writer)
             {
                 if (Encrypted)
                     writer.Write(Decrypt(Filedata));
@@ -448,10 +449,10 @@ namespace RSDKvB
         {
         }
 
-        public DataFile(string filepath, List<string> FileList) : this(new Reader(filepath), FileList)
+        public DataFile(string filepath, List<string> FileList) : this(new RsdkReader(filepath), FileList)
         { }
 
-        public DataFile(Reader reader, List<string> FileList)
+        public DataFile(RsdkReader reader, List<string> FileList)
         {
             if (!reader.ReadBytes(6).SequenceEqual(MAGIC))
             {
@@ -471,7 +472,7 @@ namespace RSDKvB
             reader.Close();
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
             FileCount = (ushort)Files.Count; //get the file count
 

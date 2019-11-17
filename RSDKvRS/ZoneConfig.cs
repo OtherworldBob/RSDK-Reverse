@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using RSDK.Core.IO;
 
 namespace RSDKvRS
 {
@@ -43,17 +44,17 @@ namespace RSDKvRS
 
         }
 
-        public Zoneconfig(string filename) : this(new Reader(filename))
+        public Zoneconfig(string filename) : this(new RsdkReader(filename))
         {
 
         }
 
-        public Zoneconfig(System.IO.Stream stream) : this(new Reader(stream))
+        public Zoneconfig(System.IO.Stream stream) : this(new RsdkReader(stream))
         {
 
         }
 
-        public Zoneconfig(Reader reader)
+        public Zoneconfig(RsdkReader reader)
         {
             StagePalette.Read(reader, 2);
 
@@ -68,7 +69,7 @@ namespace RSDKvRS
             reader.Close();
         }
 
-        internal void ReadObjectsSpriteSheets(Reader reader)
+        internal void ReadObjectsSpriteSheets(RsdkReader reader)
         {
             byte objectSheets_count = reader.ReadByte();
 
@@ -76,14 +77,14 @@ namespace RSDKvRS
             { ObjectSpritesheets.Add(reader.ReadRSDKString()); }
         }
 
-        internal void WriteObjectsSpriteSheets(Writer writer)
+        internal void WriteObjectsSpriteSheets(RsdkWriter writer)
         {
             writer.Write((byte)ObjectSpritesheets.Count);
             foreach (string name in ObjectSpritesheets)
                 writer.WriteRSDKString(name);
         }
 
-        internal void ReadObjectsNames(Reader reader)
+        internal void ReadObjectsNames(RsdkReader reader)
         {
             byte objects_count = reader.ReadByte();
 
@@ -100,7 +101,7 @@ namespace RSDKvRS
             }
         }
 
-        internal void WriteObjectsNames(Writer writer)
+        internal void WriteObjectsNames(RsdkWriter writer)
         {
             writer.Write((byte)Objects.Count);
 
@@ -115,7 +116,7 @@ namespace RSDKvRS
             }
         }
 
-        internal void ReadWAVConfiguration(Reader reader)
+        internal void ReadWAVConfiguration(RsdkReader reader)
         {
             byte SoundFX_count = reader.ReadByte();
 
@@ -123,14 +124,14 @@ namespace RSDKvRS
             { SoundFX.Add(reader.ReadString()); }
         }
 
-        internal void WriteWAVConfiguration(Writer writer)
+        internal void WriteWAVConfiguration(RsdkWriter writer)
         {
             writer.Write((byte)SoundFX.Count);
             foreach (string wav in SoundFX)
                 writer.Write(wav);
         }
 
-        internal void ReadOGGConfiguration(Reader reader)
+        internal void ReadOGGConfiguration(RsdkReader reader)
         {
             byte Music_count = reader.ReadByte();
 
@@ -138,7 +139,7 @@ namespace RSDKvRS
             { Music.Add(reader.ReadString()); }
         }
 
-        internal void WriteOGGConfiguration(Writer writer)
+        internal void WriteOGGConfiguration(RsdkWriter writer)
         {
             writer.Write((byte)Music.Count);
             foreach (string mus in Music)
@@ -147,17 +148,17 @@ namespace RSDKvRS
 
         public void Write(string filename)
         {
-            using (Writer writer = new Writer(filename))
+            using (var writer = new RsdkWriter(filename))
                 this.Write(writer);
         }
 
         public void Write(System.IO.Stream stream)
         {
-            using (Writer writer = new Writer(stream))
+            using (var writer = new RsdkWriter(stream))
                 this.Write(writer);
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
             StagePalette.Write(writer);
 

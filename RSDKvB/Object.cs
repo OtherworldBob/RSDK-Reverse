@@ -1,4 +1,5 @@
 ﻿using System;
+using RSDK.Core.IO;
 
 namespace RSDKvB
 {
@@ -97,7 +98,7 @@ namespace RSDKvB
             this.id = id;
         }
 
-        public Object(Reader reader)
+        public Object(RsdkReader reader)
         {
             cur_id++;
             id = cur_id;
@@ -184,7 +185,7 @@ namespace RSDKvB
             }
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
             if (type > 255)
             {

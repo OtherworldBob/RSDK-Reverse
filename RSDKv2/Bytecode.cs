@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using RSDK.Core.IO;
 
 namespace RSDKv2
 {
@@ -578,22 +579,22 @@ namespace RSDKv2
         int functionCount = 0;
         #endregion
 
-        int Read32(Reader reader)
+        int Read32(RsdkReader reader)
         {
             return reader.ReadInt32();
             //return reader.ReadByte() + (reader.ReadByte() << 8) + (reader.ReadByte() << 16) + (reader.ReadByte() << 24);
         }
-        short Read16(Reader reader)
+        short Read16(RsdkReader reader)
         {
             return reader.ReadInt16();
             //return (short)(reader.ReadByte() + (reader.ReadByte() << 8));
         }
-        byte Read8(Reader reader)
+        byte Read8(RsdkReader reader)
         {
             return reader.ReadByte();
         }
 
-        public Bytecode(Reader reader, int ScriptCount = 0, bool MobileVer = false)
+        public Bytecode(RsdkReader reader, int ScriptCount = 0, bool MobileVer = false)
         {
             ClearScriptData();
             scriptEng.operands = new int[10];
@@ -673,7 +674,7 @@ namespace RSDKv2
 
         }
 
-        public void LoadMobileBytecode(Reader reader, int ScriptCount = 0)
+        public void LoadMobileBytecode(RsdkReader reader, int ScriptCount = 0)
         {
             scriptEng.operands = new int[10];
 
@@ -777,7 +778,7 @@ namespace RSDKv2
 
         }
 
-        public void LoadStageBytecodeData(Reader reader, int ScriptCount = 0, bool MobileVer = false)
+        public void LoadStageBytecodeData(RsdkReader reader, int ScriptCount = 0, bool MobileVer = false)
         {
             //ClearScriptData();
             scriptEng.operands = new int[10];
@@ -855,7 +856,7 @@ namespace RSDKv2
 
         }
 
-        public void LoadStageBytecodeDataMobile(Reader reader, int ScriptCount = 0)
+        public void LoadStageBytecodeDataMobile(RsdkReader reader, int ScriptCount = 0)
         {
             scriptEng.operands = new int[10];
 
@@ -1690,7 +1691,7 @@ namespace RSDKv2
             }
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
 
             //int opcount = Read32(reader)

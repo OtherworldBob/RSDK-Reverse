@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using RSDK.Core.IO;
 
 namespace RSDKv2
 {
-    public class Gameconfig
+    public class GameConfig
     {
 
         public class Category
@@ -40,7 +42,7 @@ namespace RSDKv2
                     SceneMode = 0;
                 }
 
-                public SceneInfo(Reader reader)
+                public SceneInfo(RsdkReader reader)
                 {
                     SceneFolder = reader.ReadRSDKString();
                     ActID = reader.ReadRSDKString();
@@ -49,7 +51,7 @@ namespace RSDKv2
                     //Console.WriteLine("Name = " + Name + " ,Act ID = " + ActID + " ,Scene Folder = " + SceneFolder, " ,SceneMode = " + SceneMode);
                 }
 
-                public void Write(Writer writer)
+                public void Write(RsdkWriter writer)
                 {
                     writer.WriteRSDKString(SceneFolder);
                     writer.WriteRSDKString(ActID);
@@ -63,17 +65,11 @@ namespace RSDKv2
 
             }
 
-            public Category(string filename) : this(new Reader(filename))
-            {
+            public Category(string filename) : this(new RsdkReader(filename)) { }
 
-            }
+            public Category(Stream stream) : this(new RsdkReader(stream)) { }
 
-            public Category(System.IO.Stream stream) : this(new Reader(stream))
-            {
-
-            }
-
-            public Category(Reader reader)
+            public Category(RsdkReader reader)
             {
                 byte SceneCount = reader.ReadByte();
                 for (int i = 0; i < SceneCount; i++)
@@ -84,17 +80,17 @@ namespace RSDKv2
 
             public void Write(string filename)
             {
-                using (Writer writer = new Writer(filename))
+                using (var writer = new RsdkWriter(filename))
                     this.Write(writer);
             }
 
             public void Write(System.IO.Stream stream)
             {
-                using (Writer writer = new Writer(stream))
+                using (var writer = new RsdkWriter(stream))
                     this.Write(writer);
             }
 
-            public void Write(Writer writer)
+            public void Write(RsdkWriter writer)
             {
                 writer.Write((byte)Scenes.Count);
                 for (int i = 0; i < Scenes.Count; i++)
@@ -126,7 +122,7 @@ namespace RSDKv2
                 Name = name;
             }
 
-            public GlobalVariable(Reader reader)
+            public GlobalVariable(RsdkReader reader)
             {
                 Name = reader.ReadString();
                 byte[] bytes = new byte[4];
@@ -134,7 +130,7 @@ namespace RSDKv2
                 Value = (bytes[0] << 24) + (bytes[1] << 16) + (bytes[2] << 8) + (bytes[3] << 0);
             }
 
-            public void Write(Writer writer)
+            public void Write(RsdkWriter writer)
             {
                 writer.WriteRSDKString(Name);
                 writer.Write((byte)(Value >> 24));
@@ -182,7 +178,7 @@ namespace RSDKv2
         /// </summary>
         public List<Category> Categories = new List<Category>();
 
-        public Gameconfig()
+        public GameConfig()
         {
             Categories.Add(new Category()); //Menus
             Categories.Add(new Category()); //Stages
@@ -190,17 +186,11 @@ namespace RSDKv2
             Categories.Add(new Category()); //Bonus Stages
         }
 
-        public Gameconfig(string filename) : this(new Reader(filename))
-        {
+        public GameConfig(string filename) : this(new RsdkReader(filename)) { }
 
-        }
+        public GameConfig(Stream stream) : this(new RsdkReader(stream)) { }
 
-        public Gameconfig(System.IO.Stream stream) : this(new Reader(stream))
-        {
-
-        }
-
-        public Gameconfig(Reader reader)
+        public GameConfig(RsdkReader reader)
         {
             GameWindowText = reader.ReadRSDKString();
             DataFileName = reader.ReadRSDKString();
@@ -237,17 +227,17 @@ namespace RSDKv2
 
         public void Write(string filename)
         {
-            using (Writer writer = new Writer(filename))
+            using (var writer = new RsdkWriter(filename))
                 this.Write(writer);
         }
 
         public void Write(System.IO.Stream stream)
         {
-            using (Writer writer = new Writer(stream))
+            using (var writer = new RsdkWriter(stream))
                 this.Write(writer);
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
             writer.WriteRSDKString(GameWindowText);
             writer.WriteRSDKString(DataFileName);
@@ -277,7 +267,7 @@ namespace RSDKv2
             writer.Close();
         }
 
-        internal void ReadObjectData(Reader reader)
+        internal void ReadObjectData(RsdkReader reader)
         {
             byte objects_count = reader.ReadByte();
             for (int i = 0; i < objects_count; ++i)
@@ -286,7 +276,7 @@ namespace RSDKv2
             { ScriptPaths.Add(reader.ReadRSDKString()); /*Console.WriteLine(ScriptPaths[i]);*/ }
         }
 
-        internal void WriteObjectData(Writer writer)
+        internal void WriteObjectData(RsdkWriter writer)
         {
             writer.Write((byte)ObjectsNames.Count);
             foreach (string name in ObjectsNames)
@@ -295,14 +285,14 @@ namespace RSDKv2
                 writer.WriteRSDKString(name);
         }
 
-        internal void ReadSFXData(Reader reader)
+        internal void ReadSFXData(RsdkReader reader)
         {
             byte SoundFX_count = reader.ReadByte();
             for (int i = 0; i < SoundFX_count; ++i)
             { SoundFX.Add(reader.ReadString()); }
         }
 
-        internal void WriteSFXData(Writer writer)
+        internal void WriteSFXData(RsdkWriter writer)
         {
             writer.Write((byte)SoundFX.Count);
             foreach (string wav in SoundFX)

@@ -1,4 +1,6 @@
-﻿namespace RSDKv5
+﻿using RSDK.Core.IO;
+
+namespace RSDKv5
 {
     public class ScrollInfo
     {
@@ -33,7 +35,7 @@
             _drawOrder = dlayer;
         }
 
-        public ScrollInfo(Reader reader)
+        public ScrollInfo(RsdkReader reader)
         {
             _relativeSpeed = reader.ReadInt16();
             _constantspeed = reader.ReadInt16();
@@ -42,7 +44,7 @@
             _drawOrder = reader.ReadByte();
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
             writer.Write(_relativeSpeed);
             writer.Write(_constantspeed);

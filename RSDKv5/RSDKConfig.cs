@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using RSDK.Core.IO;
 
 namespace RSDKv5
 {
@@ -22,14 +20,14 @@ namespace RSDKv5
                 Value = value;
             }
 
-            public Variable(Reader reader)
+            public Variable(RsdkReader reader)
             {
                 Name = reader.ReadString();
                 Type = reader.ReadString();
                 Value = reader.ReadString();
             }
 
-            public void Write(Writer writer)
+            public void Write(RsdkWriter writer)
             {
                 writer.Write(Name);
                 writer.Write(Type);
@@ -46,13 +44,13 @@ namespace RSDKv5
             {
             }
 
-            public Alias(Reader reader)
+            public Alias(RsdkReader reader)
             {
                 Name = reader.ReadString();
                 Value = reader.ReadString();
             }
 
-            public void Write(Writer writer)
+            public void Write(RsdkWriter writer)
             {
                 writer.Write(Name);
                 writer.Write(Value);
@@ -67,17 +65,17 @@ namespace RSDKv5
 
         }
 
-        public RSDKConfig(string filename) : this(new Reader(filename))
+        public RSDKConfig(string filename) : this(new RsdkReader(filename))
         {
 
         }
 
-        public RSDKConfig(System.IO.Stream reader) : this(new Reader(reader))
+        public RSDKConfig(System.IO.Stream reader) : this(new RsdkReader(reader))
         {
 
         }
 
-        public RSDKConfig(Reader reader)
+        public RSDKConfig(RsdkReader reader)
         {
             byte vcount = reader.ReadByte();
 
@@ -99,17 +97,17 @@ namespace RSDKv5
 
         public void Write(string filename)
         {
-            using (Writer writer = new Writer(filename))
+            using (var writer = new RsdkWriter(filename))
                 Write(writer);
         }
 
         public void Write(System.IO.Stream stream)
         {
-            using (Writer writer = new Writer(stream))
+            using (var writer = new RsdkWriter(stream))
                 Write(writer);
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
             writer.Write((byte)Variables.Count);
 

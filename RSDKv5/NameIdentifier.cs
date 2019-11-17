@@ -1,4 +1,5 @@
 ﻿using System;
+using RSDK.Core.IO;
 
 namespace RSDKv5
 {
@@ -27,12 +28,12 @@ namespace RSDKv5
             Hash = hash;
         }
 
-        internal NameIdentifier(Reader reader)
+        internal NameIdentifier(RsdkReader reader)
         {
              Hash = reader.ReadBytes(16);
         }
 
-        internal void Write(Writer writer)
+        internal void Write(RsdkWriter writer)
         {
              writer.Write(Hash);
         }

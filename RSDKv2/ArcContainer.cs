@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using RSDK.Core.IO;
 
 namespace RSDKv2
 {
@@ -32,7 +33,7 @@ namespace RSDKv2
 
         }
 
-        public ArcContainer(Reader reader)
+        public ArcContainer(RsdkReader reader)
         {
             string FileName = System.IO.Path.GetFileNameWithoutExtension(reader.GetFilename());
 
@@ -108,7 +109,7 @@ namespace RSDKv2
             return ARCKey;
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
 
         }

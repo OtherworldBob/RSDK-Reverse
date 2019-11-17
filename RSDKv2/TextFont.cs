@@ -1,4 +1,6 @@
-﻿namespace RSDKv2
+﻿using RSDK.Core.IO;
+
+namespace RSDKv2
 {
     public class TextFont
     {
@@ -8,7 +10,7 @@
 
         }
 
-        public TextFont(Reader reader)
+        public TextFont(RsdkReader reader)
         {
             int result = 0;
 
@@ -66,7 +68,7 @@
             }
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
 
         }

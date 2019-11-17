@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using RSDK.Core.IO;
 
 namespace RSDKvRS
 {
@@ -326,10 +327,10 @@ namespace RSDKvRS
         public Script()
         { }
 
-        public Script(string filename): this(new Reader(filename))
+        public Script(string filename): this(new RsdkReader(filename))
         { }
 
-        public Script(Reader reader, bool EditorMode = false)
+        public Script(RsdkReader reader, bool EditorMode = false)
         {
             scriptEng.operands = new int[10];
             scriptEng.tempValue = new int[8];
@@ -1889,17 +1890,17 @@ namespace RSDKvRS
 
         public void Write(string filename)
         {
-            using (Writer writer = new Writer(filename))
+            using (var writer = new RsdkWriter(filename))
                 this.Write(writer);
         }
 
         public void Write(System.IO.Stream stream)
         {
-            using (Writer writer = new Writer(stream))
+            using (var writer = new RsdkWriter(stream))
                 this.Write(writer);
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
 
             writer.Close();

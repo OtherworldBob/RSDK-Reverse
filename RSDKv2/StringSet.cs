@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
+using RSDK.Core.IO;
 
 namespace RSDKv2
 {
@@ -13,7 +12,7 @@ namespace RSDKv2
 
         }
 
-        public StringSet(Reader reader)
+        public StringSet(RsdkReader reader)
         {
             int FileSize = (int)reader.BaseStream.Length;
             byte[] FileData = reader.ReadBytes(reader.BaseStream.Length);
@@ -76,7 +75,7 @@ namespace RSDKv2
 
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
 
             writer.Close();

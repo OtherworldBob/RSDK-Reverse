@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using RSDK.Core.IO;
 
 namespace RSDKv1
 {
@@ -168,7 +169,7 @@ namespace RSDKv1
 
                 }
 
-                public Frame(Reader reader, bool bitFlipped = false)
+                public Frame(RsdkReader reader, bool bitFlipped = false)
                 {
                     SpriteSheet = reader.ReadByte();
                     CollisionBox = reader.ReadByte();
@@ -195,7 +196,7 @@ namespace RSDKv1
                     }
                 }
 
-                public void Write(Writer writer)
+                public void Write(RsdkWriter writer)
                 {
                     writer.Write(SpriteSheet);
                     writer.Write(CollisionBox);
@@ -235,7 +236,7 @@ namespace RSDKv1
 
             }
 
-            public AnimationEntry(Reader reader, bool bitflipped = false)
+            public AnimationEntry(RsdkReader reader, bool bitflipped = false)
             {
                 byte frameCount = reader.ReadByte();
                 SpeedMultiplyer = reader.ReadByte();
@@ -252,7 +253,7 @@ namespace RSDKv1
                 }
             }
 
-            public void Write(Writer writer)
+            public void Write(RsdkWriter writer)
             {
                 writer.Write((byte)Frames.Count);
                 writer.Write(SpeedMultiplyer);
@@ -301,7 +302,7 @@ namespace RSDKv1
 
             }
 
-            public sprHitbox(Reader reader, bool bitflipped = false)
+            public sprHitbox(RsdkReader reader, bool bitflipped = false)
             {
                 for (int i = 0; i < 8; i++)
                 {
@@ -329,7 +330,7 @@ namespace RSDKv1
                 Console.WriteLine();
             }
 
-            public void Write(Writer writer)
+            public void Write(RsdkWriter writer)
             {
                 for (int i = 0; i < 8; i++)
                 {
@@ -346,7 +347,7 @@ namespace RSDKv1
 
         }
 
-        public Animation(Reader reader,bool BitFlipped = false)
+        public Animation(RsdkReader reader, bool BitFlipped = false)
         {
             Unknown = reader.ReadBytes(5);
 
@@ -396,7 +397,7 @@ namespace RSDKv1
             reader.Close();
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
             writer.Write(Unknown); //No idea what these are chief
 

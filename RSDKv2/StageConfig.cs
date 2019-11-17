@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using RSDK.Core.IO;
 
 namespace RSDKv2
 {
-    public class Stageconfig
+    public class StageConfig
     {
         /// <summary>
         /// the stageconfig palette (index 96-128)
@@ -26,22 +26,22 @@ namespace RSDKv2
         /// </summary>
         public bool LoadGlobalScripts = false;
 
-        public Stageconfig()
+        public StageConfig()
         {
 
         }
 
-        public Stageconfig(string filename) : this(new Reader(filename))
+        public StageConfig(string filename) : this(new RsdkReader(filename))
         {
 
         }
 
-        public Stageconfig(System.IO.Stream stream) : this(new Reader(stream))
+        public StageConfig(System.IO.Stream stream) : this(new RsdkReader(stream))
         {
 
         }
 
-        public Stageconfig(Reader reader)
+        public StageConfig(RsdkReader reader)
         {
             LoadGlobalScripts = reader.ReadBoolean();
 
@@ -55,7 +55,7 @@ namespace RSDKv2
 
         }
 
-        internal void ReadObjectsNames(Reader reader)
+        internal void ReadObjectsNames(RsdkReader reader)
         {
             byte objects_count = reader.ReadByte();
 
@@ -65,7 +65,7 @@ namespace RSDKv2
             { ScriptPaths.Add(reader.ReadRSDKString()); }
         }
 
-        internal void WriteObjectsNames(Writer writer)
+        internal void WriteObjectsNames(RsdkWriter writer)
         {
             writer.Write((byte)ObjectsNames.Count);
             foreach (string name in ObjectsNames)
@@ -74,7 +74,7 @@ namespace RSDKv2
                 writer.WriteRSDKString(srcname);
         }
 
-        internal void ReadWAVConfiguration(Reader reader)
+        internal void ReadWAVConfiguration(RsdkReader reader)
         {
             byte SoundFX_count = reader.ReadByte();
 
@@ -82,7 +82,7 @@ namespace RSDKv2
             { SoundFX.Add(reader.ReadString()); }
         }
 
-        internal void WriteWAVConfiguration(Writer writer)
+        internal void WriteWAVConfiguration(RsdkWriter writer)
         {
             writer.Write((byte)SoundFX.Count);
             foreach (string wav in SoundFX)
@@ -91,17 +91,17 @@ namespace RSDKv2
 
         public void Write(string filename)
         {
-            using (Writer writer = new Writer(filename))
+            using (var writer = new RsdkWriter(filename))
                 this.Write(writer);
         }
 
         public void Write(System.IO.Stream stream)
         {
-            using (Writer writer = new Writer(stream))
+            using (var writer = new RsdkWriter(stream))
                 this.Write(writer);
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
             writer.Write(LoadGlobalScripts);
 

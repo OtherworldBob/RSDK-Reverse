@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿using RSDK.Core.IO;
 
 namespace RSDKvRS
 {
@@ -28,17 +27,17 @@ namespace RSDKvRS
             }
         }
 
-        public Palette(Reader r)
+        public Palette(RsdkReader r)
         {
             Read(r);
         }
 
-        public Palette(Reader r, int palcols)
+        public Palette(RsdkReader r, int palcols)
         {
             Read(r, palcols);
         }
 
-        public void Read(Reader reader, int Columns)
+        public void Read(RsdkReader reader, int Columns)
         {
             int palColumns = Columns;
 
@@ -51,7 +50,7 @@ namespace RSDKvRS
             }
         }
 
-        public void Read(Reader reader)
+        public void Read(RsdkReader reader)
         {
             int palColumns = ((int)reader.BaseStream.Length / 8) / 6;
 
@@ -66,17 +65,17 @@ namespace RSDKvRS
 
         public void Write(string filename)
         {
-            using (Writer writer = new Writer(filename))
+            using (var writer = new RsdkWriter(filename))
                 this.Write(writer);
         }
 
         public void Write(System.IO.Stream stream)
         {
-            using (Writer writer = new Writer(stream))
+            using (var writer = new RsdkWriter(stream))
                 this.Write(writer);
         }
 
-        internal void Write(Writer writer)
+        internal void Write(RsdkWriter writer)
         {
             int palColumns = Colors.Length/16;
             //Console.WriteLine(palColumns);

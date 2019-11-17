@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using RSDK.Core.IO;
 
 namespace RSDKv5
 {
@@ -29,65 +30,65 @@ namespace RSDKv5
         /// </summary>
         public List<WAVConfiguration> WAVs = new List<WAVConfiguration>();
 
-        internal void ReadMagic(Reader reader)
+        internal void ReadMagic(RsdkReader reader)
         {
             if (!reader.ReadBytes(4).SequenceEqual(MAGIC))
                 throw new Exception("Invalid config file header magic");
         }
 
-        internal void WriteMagic(Writer writer)
+        internal void WriteMagic(RsdkWriter writer)
         {
             writer.Write(MAGIC);
         }
 
-        internal void ReadCommonConfig(Reader reader)
+        internal void ReadCommonConfig(RsdkReader reader)
         {
             this.ReadObjectsNames(reader);
             this.ReadPalettes(reader);
             this.ReadWAVConfiguration(reader);
         }
 
-        internal void WriteCommonConfig(Writer writer)
+        internal void WriteCommonConfig(RsdkWriter writer)
         {
             this.WriteObjectsNames(writer);
             this.WritePalettes(writer);
             this.WriteWAVConfiguration(writer);
         }
 
-        internal void ReadObjectsNames(Reader reader)
+        internal void ReadObjectsNames(RsdkReader reader)
         {
             byte objects_count = reader.ReadByte();
             for (int i = 0; i < objects_count; ++i)
                 ObjectsNames.Add(reader.ReadRSDKString());
         }
 
-        internal void WriteObjectsNames(Writer writer)
+        internal void WriteObjectsNames(RsdkWriter writer)
         {
             writer.Write((byte)ObjectsNames.Count);
             foreach (string name in ObjectsNames)
                 writer.WriteRSDKString(name);
         }
 
-        internal void ReadPalettes(Reader reader)
+        internal void ReadPalettes(RsdkReader reader)
         {
             for (int i = 0; i < PALETTES_COUNT; ++i)
                 Palettes[i] = new Palette(reader);
         }
 
-        internal void WritePalettes(Writer writer)
+        internal void WritePalettes(RsdkWriter writer)
         {
             foreach (Palette palette in Palettes)
                 palette.Write(writer);
         }
 
-        internal void ReadWAVConfiguration(Reader reader)
+        internal void ReadWAVConfiguration(RsdkReader reader)
         {
             byte wavs_count = reader.ReadByte();
             for (int i = 0; i < wavs_count; ++i)
                 WAVs.Add(new WAVConfiguration(reader));
         }
 
-        internal void WriteWAVConfiguration(Writer writer)
+        internal void WriteWAVConfiguration(RsdkWriter writer)
         {
             writer.Write((byte)WAVs.Count);
             foreach (WAVConfiguration wav in WAVs)

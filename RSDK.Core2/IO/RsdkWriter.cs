@@ -1,16 +1,16 @@
-﻿using System.Text;
-using System.IO;
-using zlib;
+﻿using System.IO;
+using System.IO.Compression;
+using System.Text;
 
-namespace RSDKv5
+namespace RSDK.Core.IO
 {
-    public class Writer : BinaryWriter
+    public class RsdkWriter : BinaryWriter
     {
-        public Writer(Stream stream) : base(stream)
+        public RsdkWriter(Stream stream) : base(stream)
         {
         }
 
-        public Writer(string file) : base(File.Open(file, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
+        public RsdkWriter(string file) : base(File.Open(file, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
         {
         }
 
@@ -34,6 +34,12 @@ namespace RSDKv5
             get { return BaseStream.Length; }
         }
 
+        public string GetFilename()
+        {
+            var fileStream = BaseStream as FileStream;
+            return fileStream.Name;
+        }
+
         public void WriteUInt32BE(uint val)
         {
             val = ((val >> 24) & 0xff) | ((val << 8) & 0xff0000) | ((val >> 8) & 0xff00) | ((val << 24) & 0xff000000);
@@ -54,15 +60,19 @@ namespace RSDKv5
 
         public void WriteCompressed(byte[] bytes)
         {
-            using (MemoryStream outMemoryStream = new MemoryStream())
-            using (ZOutputStream compress = new ZOutputStream(outMemoryStream, zlibConst.Z_DEFAULT_COMPRESSION)) {
-                compress.Write(bytes, 0, bytes.Length);
-                compress.finish();
+            using (var inStream = new MemoryStream())
+            {
+                inStream.Write(bytes, 0, bytes.Length);
+                using (var outMemoryStream = new MemoryStream())
+                using (var compressionStream = new DeflateStream(outMemoryStream, CompressionMode.Compress))
+                {
+                    inStream.CopyTo(compressionStream);
 
-                byte[] data = outMemoryStream.ToArray();
-                this.Write((uint)data.Length + sizeof(uint));
-                this.WriteUInt32BE((uint)bytes.Length);
-                this.Write(data);
+                    byte[] data = outMemoryStream.ToArray();
+                    Write((uint)data.Length + sizeof(uint));
+                    WriteUInt32BE((uint)bytes.Length);
+                    Write(data);
+                }
             }
         }
     }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using RSDK.Core.IO;
+
 namespace RSDKvRS
 {
     public class gfx
@@ -31,17 +33,17 @@ namespace RSDKvRS
 
         }
 
-        public gfx(string filename, bool dcGFX = false) : this(new Reader(filename),dcGFX)
+        public gfx(string filename, bool dcGFX = false) : this(new RsdkReader(filename),dcGFX)
         {
 
         }
 
-        public gfx(System.IO.Stream stream, bool dcGFX = false) : this(new Reader(stream),dcGFX)
+        public gfx(System.IO.Stream stream, bool dcGFX = false) : this(new RsdkReader(stream),dcGFX)
         {
 
         }
 
-        public gfx(Reader reader, bool dcGFX = false)
+        public gfx(RsdkReader reader, bool dcGFX = false)
         {
 
             if (dcGFX)
@@ -175,13 +177,13 @@ namespace RSDKvRS
 
         public void Write(string filename, bool dcGFX = false)
         {
-            using (Writer writer = new Writer(filename))
+            using (var writer = new RsdkWriter(filename))
                 this.Write(writer,dcGFX);
         }
 
         public void Write(System.IO.Stream stream, bool dcGFX = false)
         {
-            using (Writer writer = new Writer(stream))
+            using (var writer = new RsdkWriter(stream))
                 this.Write(writer,dcGFX);
         }
 
@@ -192,7 +194,7 @@ namespace RSDKvRS
             return (byte)pixel8bpp;
         }
 
-        public void Write(Writer writer, bool dcGFX = false, bool raw = false)
+        public void Write(RsdkWriter writer, bool dcGFX = false, bool raw = false)
         {
             if (gfxImage == null)
                 throw new Exception("Image is NULL");
@@ -291,7 +293,7 @@ namespace RSDKvRS
             writer.Close();
         }
 
-        private static void rle_write(Writer file, int pixel, int count, bool dcGfx = false)
+        private static void rle_write(RsdkWriter file, int pixel, int count, bool dcGfx = false)
         {
             if (count <= 2)
             {

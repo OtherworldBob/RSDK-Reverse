@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows;
+using RSDK.Core.IO;
 
 namespace RSDKv5
 {
-    public class Gameconfig : CommonConfig
+    public class GameConfig : CommonConfig
     {
         /// <summary>
         /// the name of the game (also window name)
@@ -75,7 +75,7 @@ namespace RSDKv5
             {
             }
 
-            public SceneInfo(Reader reader, bool scenesHaveModeFilter, int index, bool levelIDMode = false)
+            public SceneInfo(RsdkReader reader, bool scenesHaveModeFilter, int index, bool levelIDMode = false)
             {
                 Name = reader.ReadRSDKString();
                 Zone = reader.ReadRSDKString();
@@ -94,7 +94,7 @@ namespace RSDKv5
                 return Path.Combine(DataFolder, "Stages", Zone, "Scene" + SceneID + ".bin");
             }
 
-            public void Write(Writer writer, bool scenesHaveModeFilter = false)
+            public void Write(RsdkWriter writer, bool scenesHaveModeFilter = false)
             {
                 writer.WriteRSDKString(Name);
                 writer.WriteRSDKString(Zone);
@@ -120,7 +120,7 @@ namespace RSDKv5
                 Name = "New Category";
             }
 
-            public Category(Reader reader, bool scenesHaveModeFilter)
+            public Category(RsdkReader reader, bool scenesHaveModeFilter)
             {
                 Name = reader.ReadRSDKString();
 
@@ -136,7 +136,7 @@ namespace RSDKv5
 
             }
 
-            public void Write(Writer writer, bool scenesHaveModeFilter = false)
+            public void Write(RsdkWriter writer, bool scenesHaveModeFilter = false)
             {
                 writer.WriteRSDKString(Name);
 
@@ -162,7 +162,7 @@ namespace RSDKv5
 
             }
 
-            internal ConfigurableMemoryEntry(Reader reader)
+            internal ConfigurableMemoryEntry(RsdkReader reader)
             {
                 Index = reader.ReadUInt32();
                 uint Count = reader.ReadUInt32();
@@ -173,7 +173,7 @@ namespace RSDKv5
                 }
             }
 
-            internal void Write(Writer writer)
+            internal void Write(RsdkWriter writer)
             {
                 writer.Write(Index);
                 writer.Write((uint)Data.Count);
@@ -192,35 +192,35 @@ namespace RSDKv5
         /// </summary>
         public List<ConfigurableMemoryEntry> ConfigMemory = new List<ConfigurableMemoryEntry>();
 
-        public Gameconfig()
+        public GameConfig()
         {
         }
 
-        public Gameconfig(string filename)
+        public GameConfig(string filename)
         {
             FilePath = filename;
-            using (var reader = new Reader(filename))
+            using (var reader = new RsdkReader(filename))
                 Read(reader);
         }
 
-        public Gameconfig(Stream stream)
+        public GameConfig(Stream stream)
         {
-            using (var reader = new Reader(stream))
+            using (var reader = new RsdkReader(stream))
                 Read(reader);
         }
 
-        public Gameconfig(Reader reader, bool closeReader = false)
+        public GameConfig(RsdkReader reader, bool closeReader = false)
         {
             ReadConfig(reader, closeReader);
         }
 
-        public void Read(Reader reader, bool closeReader = false)
+        public void Read(RsdkReader reader, bool closeReader = false)
         {
             ReadConfig(reader, closeReader);
         }
 
 
-        public void ReadConfig(Reader reader, bool closeReader = false)
+        public void ReadConfig(RsdkReader reader, bool closeReader = false)
         {
             ReadMagic(reader);
 
@@ -272,7 +272,7 @@ namespace RSDKv5
         {
             if (File.Exists(filename))
             {
-                using (Writer writer = new Writer(filename))
+                using (var writer = new RsdkWriter(filename))
                     Write(writer);
             }
             else
@@ -284,11 +284,11 @@ namespace RSDKv5
 
         public void Write(Stream stream)
         {
-            using (Writer writer = new Writer(stream))
+            using (var writer = new RsdkWriter(stream))
                 Write(writer);
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
             WriteMagic(writer);
 

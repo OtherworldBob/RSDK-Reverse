@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using RSDK.Core.IO;
 
 namespace RSDKvB
 {
@@ -592,20 +593,20 @@ namespace RSDKvB
         FunctionScript[] functionScriptList = new FunctionScript[0x200];
         #endregion
 
-        int Read32(Reader reader)
+        int Read32(RsdkReader reader)
         {
             return reader.ReadByte() + (reader.ReadByte() << 8) + (reader.ReadByte() << 16) + (reader.ReadByte() << 24);
         }
-        int Read16(Reader reader)
+        int Read16(RsdkReader reader)
         {
             return reader.ReadByte() + (reader.ReadByte() << 8);
         }
-        int Read8(Reader reader)
+        int Read8(RsdkReader reader)
         {
             return reader.ReadByte();
         }
 
-        public Bytecode(Reader reader, int ScriptCount = 0, bool Gameconfig = true)
+        public Bytecode(RsdkReader reader, int ScriptCount = 0, bool Gameconfig = true)
         {
             scriptEng.operands = new int[10];
             scriptEng.tempValue = new int[8];
@@ -675,7 +676,7 @@ namespace RSDKvB
 
         }
 
-        public Bytecode(Reader reader, int ScriptCount = 0)
+        public Bytecode(RsdkReader reader, int ScriptCount = 0)
         {
             scriptEng.operands = new int[10];
             scriptEng.tempValue = new int[8];
@@ -751,7 +752,7 @@ namespace RSDKvB
 
         }
 
-        public void LoadStageBytecodeData(Reader reader, int ScriptCount = 0)
+        public void LoadStageBytecodeData(RsdkReader reader, int ScriptCount = 0)
         {
             scriptEng.operands = new int[10];
             scriptEng.tempValue = new int[8];
@@ -1515,7 +1516,7 @@ namespace RSDKvB
             }
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
 
         }

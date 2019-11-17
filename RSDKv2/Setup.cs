@@ -1,4 +1,6 @@
-﻿namespace RSDKv2
+﻿using RSDK.Core.IO;
+
+namespace RSDKv2
 {
     public class Setup
     {
@@ -13,7 +15,7 @@
 
         }
 
-        public Setup(Reader reader)
+        public Setup(RsdkReader reader)
         {
             GameWidth = reader.ReadInt32();
             GameHeight = reader.ReadInt32();
@@ -21,7 +23,7 @@
             Windowed = reader.ReadBoolean();
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
             writer.Write(GameWidth);
             writer.Write(GameHeight);

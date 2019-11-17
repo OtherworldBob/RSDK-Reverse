@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using RSDK.Core.IO;
 
 namespace RSDKv5
 {
@@ -80,7 +81,7 @@ namespace RSDKv5
             }
         }
 
-        internal SceneLayer(Reader reader)
+        internal SceneLayer(RsdkReader reader)
         {
             IgnoredByte = reader.ReadByte();
 
@@ -102,7 +103,7 @@ namespace RSDKv5
             ScrollIndexes = reader.ReadCompressed();
 
             Tiles = new ushort[Height][];
-            using (Reader creader = reader.GetCompressedStream())
+            using (var creader = reader.GetCompressedStream())
             {
                 for (int i = 0; i < Height; ++i)
                 {
@@ -113,7 +114,7 @@ namespace RSDKv5
             }
         }
 
-        internal void Write(Writer writer)
+        internal void Write(RsdkWriter writer)
         {
             writer.Write(IgnoredByte);
 
@@ -135,7 +136,7 @@ namespace RSDKv5
             writer.WriteCompressed(ScrollIndexes);
 
             using (MemoryStream cmem = new MemoryStream())
-            using (Writer cwriter = new Writer(cmem))
+            using (var cwriter = new RsdkWriter(cmem))
             {
                 for (int i = 0; i < Height; ++i)
                     for (int j = 0; j < Width; ++j)

@@ -1,4 +1,5 @@
 ﻿using System;
+using RSDK.Core.IO;
 using SystemColor = System.Drawing.Color;
 
 namespace RSDKv5
@@ -34,12 +35,12 @@ namespace RSDKv5
             this.A = A;
         }
 
-        internal Color(Reader reader) : this()
+        internal Color(RsdkReader reader) : this()
         {
             Read(reader);
         }
 
-        internal void Read(Reader reader)
+        internal void Read(RsdkReader reader)
         {
             B = reader.ReadByte();
             G = reader.ReadByte();
@@ -63,7 +64,7 @@ namespace RSDKv5
             return returnColor;
         }
 
-        internal void Write(Writer writer)
+        internal void Write(RsdkWriter writer)
         {
             writer.Write(B);
             writer.Write(G);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using RSDK.Core.IO;
 
 namespace RSDKv5
 {
@@ -44,12 +45,12 @@ namespace RSDKv5
             Z = new Value(y);
         }
 
-        internal Position(Reader reader, bool vec3 = false) : this()
+        internal Position(RsdkReader reader, bool vec3 = false) : this()
         {
             Read(reader, vec3);
         }
 
-        internal void Read(Reader reader, bool vec3 = false)
+        internal void Read(RsdkReader reader, bool vec3 = false)
         {
             X.Low = reader.ReadUInt16();
             X.High = reader.ReadInt16();
@@ -64,7 +65,7 @@ namespace RSDKv5
             }
         }
 
-        internal void Write(Writer writer, bool vec3 = false)
+        internal void Write(RsdkWriter writer, bool vec3 = false)
         {
             writer.Write(X.Low);
             writer.Write(X.High);

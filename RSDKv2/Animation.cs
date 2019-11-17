@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using RSDK.Core.IO;
 
 namespace RSDKv2
 {
@@ -102,7 +103,7 @@ namespace RSDKv2
 
                 }
 
-                public Frame(Reader reader, Animation anim = null)
+                public Frame(RsdkReader reader, Animation anim = null)
                 {
                     SpriteSheet = reader.ReadByte();
                     CollisionBox = reader.ReadByte();
@@ -114,7 +115,7 @@ namespace RSDKv2
                     PivotY = reader.ReadSByte();
                 }
 
-                public void Write(Writer writer)
+                public void Write(RsdkWriter writer)
                 {
                     writer.Write(SpriteSheet);
                     writer.Write(CollisionBox);
@@ -154,7 +155,7 @@ namespace RSDKv2
 
             }
 
-            public AnimationEntry(Reader reader, Animation anim = null)
+            public AnimationEntry(RsdkReader reader, Animation anim = null)
             {
                 AnimName = reader.ReadString();
                 short frameCount = reader.ReadByte();
@@ -167,7 +168,7 @@ namespace RSDKv2
                 }
             }
 
-            public void Write(Writer writer)
+            public void Write(RsdkWriter writer)
             {
                 writer.Write(AnimName);
                 writer.Write((byte)Frames.Count);
@@ -218,7 +219,7 @@ namespace RSDKv2
 
             }
 
-            public sprHitbox(Reader reader)
+            public sprHitbox(RsdkReader reader)
             {
                 for (int i = 0; i < 8; i++)
                 {
@@ -231,7 +232,7 @@ namespace RSDKv2
                 Console.WriteLine();
             }
 
-            public void Write(Writer writer)
+            public void Write(RsdkWriter writer)
             {
                 for (int i = 0; i < 8; i++)
                 {
@@ -248,7 +249,7 @@ namespace RSDKv2
 
         }
 
-        public Animation(Reader reader)
+        public Animation(RsdkReader reader)
         {
             int spriteSheetCount = reader.ReadByte();
             for (int i = 0; i < spriteSheetCount; ++i)
@@ -264,7 +265,7 @@ namespace RSDKv2
             reader.Close();
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
             writer.Write((byte)SpriteSheets.Count);
             for (int i = 0; i < SpriteSheets.Count; ++i)

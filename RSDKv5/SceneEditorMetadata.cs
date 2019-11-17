@@ -1,4 +1,6 @@
-﻿namespace RSDKv5
+﻿using RSDK.Core.IO;
+
+namespace RSDKv5
 {
     public class SceneEditorMetadata
     {
@@ -36,7 +38,7 @@
             StampName = "Stamps.bin";
         }
 
-        internal SceneEditorMetadata(Reader reader)
+        internal SceneEditorMetadata(RsdkReader reader)
         {
             UnknownByte = reader.ReadByte();
             BackgroundColor1 = new Color(reader);
@@ -46,7 +48,7 @@
             UnknownByte2 = reader.ReadByte();
         }
 
-        internal void Write(Writer writer)
+        internal void Write(RsdkWriter writer)
         {
             writer.Write(UnknownByte);
             BackgroundColor1.Write(writer);

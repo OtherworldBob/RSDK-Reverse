@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using RSDK.Core.IO;
 
 namespace RSDKv5
 {
@@ -24,13 +25,13 @@ namespace RSDKv5
 
             }
 
-            public TexturePosition(Reader reader)
+            public TexturePosition(RsdkReader reader)
             {
                 u = reader.ReadSingle();
                 v = reader.ReadSingle();
             }
 
-            public void Write(Writer writer)
+            public void Write(RsdkWriter writer)
             {
                 writer.Write(u);
                 writer.Write(v);
@@ -64,7 +65,7 @@ namespace RSDKv5
                 a = 255;
             }
 
-            public Colour(Reader reader)
+            public Colour(RsdkReader reader)
             {
                 b = reader.ReadByte();
                 g = reader.ReadByte();
@@ -72,7 +73,7 @@ namespace RSDKv5
                 a = reader.ReadByte();
             }
 
-            public void Write(Writer writer)
+            public void Write(RsdkWriter writer)
             {
                 writer.Write(b);
                 writer.Write(g);
@@ -208,14 +209,14 @@ namespace RSDKv5
 
                     }
 
-                    public Normal(Reader reader)
+                    public Normal(RsdkReader reader)
                     {
                         x = reader.ReadSingle();
                         y = reader.ReadSingle();
                         z = reader.ReadSingle();
                     }
 
-                    public void Write(Writer writer)
+                    public void Write(RsdkWriter writer)
                     {
                         writer.Write(x);
                         writer.Write(y);
@@ -237,7 +238,7 @@ namespace RSDKv5
 
                 }
 
-                public Vertex(Reader reader, bool useNormals)
+                public Vertex(RsdkReader reader, bool useNormals)
                 {
                     x = reader.ReadSingle();
                     y = reader.ReadSingle();
@@ -250,7 +251,7 @@ namespace RSDKv5
                     }
                 }
 
-                public void Write(Writer writer, bool useNormals)
+                public void Write(RsdkWriter writer, bool useNormals)
                 {
                     writer.Write(x);
                     writer.Write(y);
@@ -277,7 +278,7 @@ namespace RSDKv5
 
             }
 
-            public Frame(Reader reader, int VertexCount, bool useNormals = false)
+            public Frame(RsdkReader reader, int VertexCount, bool useNormals = false)
             {
                 for (int i = 0; i < VertexCount; i++)
                 {
@@ -285,7 +286,7 @@ namespace RSDKv5
                 }
             }
 
-            public void Write(Writer writer, bool useNormals = false)
+            public void Write(RsdkWriter writer, bool useNormals = false)
             {
                 for (int i = 0; i < Vertices.Count; i++)
                 {
@@ -598,12 +599,12 @@ namespace RSDKv5
             }
         }
 
-        public Model(string filename) : this(new Reader(filename))
+        public Model(string filename) : this(new RsdkReader(filename))
         {
 
         }
 
-        public Model(Stream stream) : this(new Reader(stream))
+        public Model(Stream stream) : this(new RsdkReader(stream))
         {
 
         }
@@ -626,7 +627,7 @@ namespace RSDKv5
             return Value;
         }
 
-        public Model(Reader reader)
+        public Model(RsdkReader reader)
         {
             if (!reader.ReadBytes(4).SequenceEqual(MAGIC))
                 throw new Exception("Invalid config file header magic");
@@ -685,7 +686,7 @@ namespace RSDKv5
             Console.WriteLine("MDL READ: FileSize: {0}, Position: 0x{1:X8}, DataLeft: {2}", reader.BaseStream.Length, reader.BaseStream.Position, reader.BaseStream.Length - reader.BaseStream.Position);
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
             writer.Write(MAGIC);
             byte flags = 0;
@@ -771,7 +772,7 @@ namespace RSDKv5
             }
         }
 
-        public void WriteMTL(Writer writer)
+        public void WriteMTL(RsdkWriter writer)
         {
             StringBuilder builder = new StringBuilder();
             // Shows I been here lol - SS16
@@ -789,7 +790,7 @@ namespace RSDKv5
         }
 
 
-        public void WriteAsSTLBinary(Writer writer)
+        public void WriteAsSTLBinary(RsdkWriter writer)
         {
 
             Debugger.Launch();

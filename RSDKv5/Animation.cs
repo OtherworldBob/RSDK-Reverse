@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using RSDK.Core.IO;
 
 namespace RSDKv5
 {
@@ -120,7 +121,7 @@ namespace RSDKv5
 
                 }
 
-                public Frame(Reader reader, Animation anim = null)
+                public Frame(RsdkReader reader, Animation anim = null)
                 {
                     SpriteSheet = reader.ReadByte();
                     CollisionBox = 0;
@@ -144,7 +145,7 @@ namespace RSDKv5
                     }
                 }
 
-                public void Write(Writer writer)
+                public void Write(RsdkWriter writer)
                 {
                     writer.Write(SpriteSheet);
                     writer.Write(Delay);
@@ -215,7 +216,7 @@ namespace RSDKv5
 
             }
 
-            public AnimationEntry(Reader reader, Animation anim = null)
+            public AnimationEntry(RsdkReader reader, Animation anim = null)
             {
                 AnimName = reader.ReadRSDKString().Replace("" + '\0', "");
                 short frameCount = reader.ReadInt16();
@@ -228,7 +229,7 @@ namespace RSDKv5
                 }
             }
 
-            public void Write(Writer writer)
+            public void Write(RsdkWriter writer)
             {
                 writer.WriteRSDKString(AnimName + '\0');
                 writer.Write((short)Frames.Count);
@@ -266,7 +267,7 @@ namespace RSDKv5
 
         }
 
-        public Animation(Reader reader)
+        public Animation(RsdkReader reader)
         {
             if (!reader.ReadBytes(4).SequenceEqual(MAGIC))
                 throw new Exception("Invalid config file header magic");
@@ -297,7 +298,7 @@ namespace RSDKv5
             reader.Close();
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
             writer.Write(MAGIC);
             writer.Write(TotalFrameCount);

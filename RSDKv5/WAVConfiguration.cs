@@ -1,4 +1,6 @@
-﻿namespace RSDKv5
+﻿using RSDK.Core.IO;
+
+namespace RSDKv5
 {
     public class WAVConfiguration
     {
@@ -13,13 +15,13 @@
         {
         }
 
-        public WAVConfiguration(Reader reader)
+        public WAVConfiguration(RsdkReader reader)
         {
             Name = reader.ReadRSDKString();
             MaxConcurrentPlay = reader.ReadByte();
         }
 
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
             writer.WriteRSDKString(Name);
             writer.Write(MaxConcurrentPlay);

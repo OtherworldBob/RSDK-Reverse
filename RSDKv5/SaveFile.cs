@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using RSDK.Core.IO;
 
 namespace RSDKv5
 {
@@ -373,7 +374,7 @@ namespace RSDKv5
             return SaveRAM[location];
         }
 
-        public SaveFiles(Stream stream, bool isPCVer = true) : this(new Reader(stream), isPCVer)
+        public SaveFiles(Stream stream, bool isPCVer = true) : this(new RsdkReader(stream), isPCVer)
         {
         }
 
@@ -381,7 +382,7 @@ namespace RSDKv5
         {
         }
 
-        public SaveFiles(Reader reader, bool isPCVer = true)
+        public SaveFiles(RsdkReader reader, bool isPCVer = true)
         {
             IsLittleEndian = isPCVer;
 
@@ -395,17 +396,17 @@ namespace RSDKv5
 
         public void Write(string filename, bool isPCVer = true)
         {
-            using (Writer writer = new Writer(filename))
+            using (var writer = new RsdkWriter(filename))
                 this.Write(writer, isPCVer);
         }
 
         public void Write(Stream stream, bool isPCVer = true)
         {
-            using (Writer writer = new Writer(stream))
+            using (var writer = new RsdkWriter(stream))
                 this.Write(writer, isPCVer);
         }
 
-        public void Write(Writer writer, bool isPCVer = true)
+        public void Write(RsdkWriter writer, bool isPCVer = true)
         {
 
             IsLittleEndian = isPCVer;

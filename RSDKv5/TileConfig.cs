@@ -2,10 +2,11 @@
 using System.Linq;
 using System.IO;
 using System.Drawing;
+using RSDK.Core.IO;
 
 namespace RSDKv5
 {
-    public class Tileconfig
+    public class TileConfig
     {
         /// <summary>
         /// the signature of the file
@@ -84,7 +85,7 @@ namespace RSDKv5
                 Behaviour = 0;
             }
 
-            public CollisionMask(Reader reader)
+            public CollisionMask(RsdkReader reader)
             {
                 Collision = reader.ReadBytes(16);
                 HasCollision = reader.ReadBytes(16).Select(x => x != 0).ToArray();
@@ -96,7 +97,7 @@ namespace RSDKv5
                 Behaviour = reader.ReadByte();
             }
 
-            public CollisionMask(Stream stream) : this(new Reader(stream))
+            public CollisionMask(Stream stream) : this(new RsdkReader(stream))
             {
 
             }
@@ -188,7 +189,7 @@ namespace RSDKv5
             }
         }
 
-        public Tileconfig()
+        public TileConfig()
         {
             for (int i = 0; i < TILES_COUNT; ++i)
                 CollisionPath1[i] = new CollisionMask();
@@ -196,22 +197,22 @@ namespace RSDKv5
                 CollisionPath2[i] = new CollisionMask();
         }
 
-        public Tileconfig(string filename) : this(new Reader(filename))
+        public TileConfig(string filename) : this(new RsdkReader(filename))
         {
 
         }
 
-        public Tileconfig(Stream stream) : this(new Reader(stream))
+        public TileConfig(Stream stream) : this(new RsdkReader(stream))
         {
 
         }
 
-        public Tileconfig(Reader reader)
+        public TileConfig(RsdkReader reader)
         {
             if (!reader.ReadBytes(4).SequenceEqual(MAGIC))
                 throw new Exception("Invalid tiles config file header magic");
 
-            using (Reader creader = reader.GetCompressedStream())
+            using (var creader = reader.GetCompressedStream())
             {
                 for (int i = 0; i < TILES_COUNT; ++i)
                     CollisionPath1[i] = new CollisionMask(creader);
@@ -221,23 +222,23 @@ namespace RSDKv5
             reader.Close();
         }
 
-        public Tileconfig(string filename, bool unc) : this(new Reader(filename), unc)
+        public TileConfig(string filename, bool unc) : this(new RsdkReader(filename), unc)
         {
 
         }
 
-        public Tileconfig(Stream stream, bool unc) : this(new Reader(stream), unc)
+        public TileConfig(Stream stream, bool unc) : this(new RsdkReader(stream), unc)
         {
 
         }
 
-        private Tileconfig(Reader reader, bool unc)
+        private TileConfig(RsdkReader reader, bool unc)
         {
             if (!reader.ReadBytes(4).SequenceEqual(MAGIC))
                 throw new Exception("Invalid tiles config file header magic");
             if (!unc)
             {
-                using (Reader creader = reader.GetCompressedStream())
+                using (var creader = reader.GetCompressedStream())
                 {
                     for (int i = 0; i < TILES_COUNT; ++i)
                         CollisionPath1[i] = new CollisionMask(creader);
@@ -257,16 +258,16 @@ namespace RSDKv5
 
         public void Write(string filename)
         {
-            Write(new Writer(filename));
+            Write(new RsdkWriter(filename));
         }
 
         public void Write(Stream s)
         {
-            Write(new Writer(s));
+            Write(new RsdkWriter(s));
         }
 
         // Write Compressed
-        public void Write(Writer writer)
+        public void Write(RsdkWriter writer)
         {
             writer.Write(MAGIC);
             using (var stream = new MemoryStream())
@@ -285,16 +286,16 @@ namespace RSDKv5
 
         public void WriteUnc(string filename)
         {
-            WriteUnc(new Writer(filename));
+            WriteUnc(new RsdkWriter(filename));
         }
 
         public void WriteUnc(Stream s)
         {
-            WriteUnc(new Writer(s));
+            WriteUnc(new RsdkWriter(s));
         }
 
         // Write Uncompressed
-        public void WriteUnc(Writer writer)
+        public void WriteUnc(RsdkWriter writer)
         {
             for (int i = 0; i < TILES_COUNT; ++i)
                 CollisionPath1[i].WriteUnc(writer);

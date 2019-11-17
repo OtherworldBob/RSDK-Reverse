@@ -1,4 +1,5 @@
 ﻿using System;
+using RSDK.Core.IO;
 
 namespace RSDKv5
 {
@@ -196,13 +197,13 @@ namespace RSDKv5
             return n;
         }
 
-        internal AttributeValue(Reader reader, AttributeTypes type)
+        internal AttributeValue(RsdkReader reader, AttributeTypes type)
         {
             Type = type;
             Read(reader);
         }
 
-        internal void Read(Reader reader)
+        internal void Read(RsdkReader reader)
         {
             switch (Type)
             {
@@ -245,7 +246,7 @@ namespace RSDKv5
             }
         }
 
-        internal void Write(Writer writer)
+        internal void Write(RsdkWriter writer)
         {
             switch (Type)
             {

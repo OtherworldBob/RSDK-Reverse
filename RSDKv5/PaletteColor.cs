@@ -1,4 +1,6 @@
-﻿namespace RSDKv5
+﻿using RSDK.Core.IO;
+
+namespace RSDKv5
 {
     public class PaletteColor
     {
@@ -23,19 +25,19 @@
             this.B = B;
         }
 
-        internal PaletteColor(Reader reader)
+        internal PaletteColor(RsdkReader reader)
         {
             this.Read(reader);
         }
 
-        internal void Read(Reader reader)
+        internal void Read(RsdkReader reader)
         {
             R = reader.ReadByte();
             G = reader.ReadByte();
             B = reader.ReadByte();
         }
 
-        internal void Write(Writer writer)
+        internal void Write(RsdkWriter writer)
         {
             writer.Write(R);
             writer.Write(G);
